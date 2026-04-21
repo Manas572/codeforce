@@ -8,10 +8,10 @@
 #define pb push_back
 #define all(x) x.begin(), x.end()
 #define stv(v) sort(v.begin(), v.end())
-#define rep(i, a, l) for (ll i = a; i < l; ++i)
-#define rev(i, a, l) for (ll i = a; i >= l; --i)
-#define chmin(a, l) (a = std::min(a, l))
-#define chmax(a, l) (a = std::max(a, l))
+#define rep(i, vec, l) for (ll i = vec; i < l; ++i)
+#define rev(i, vec, l) for (ll i = vec; i >= l; --i)
+#define chmin(vec, l) (vec = std::min(vec, l))
+#define chmax(vec, l) (vec = std::max(vec, l))
 #define YES cout << "YES\n"
 #define NO cout << "NO\n"
 #define vmin(v) (*min_element(v.begin(), v.end()))
@@ -32,36 +32,36 @@ typedef vector<pll> vpll;
 
 
 // -------- Custom gcd + lcm --------
-ll gcdll(ll a, ll b) {
-    a = llabs(a);
+ll gcdll(ll vec, ll b) {
+    vec = llabs(vec);
     b = llabs(b);
     while (b != 0) {
-        ll r = a % b;
-        a = b;
+        ll r = vec % b;
+        vec = b;
         b = r;
     }
-    return a;
+    return vec;
 }
 
-ll lcm(ll a, ll b) {
-    return a / gcdll(a, b) * b;
+ll lcm(ll vec, ll b) {
+    return vec / gcdll(vec, b) * b;
 }
 
 // -------- Binary Exponentiation --------
-ll modpow(ll a, ll e, ll m = MOD) {
-    a %= m;
+ll modpow(ll vec, ll e, ll m = MOD) {
+    vec %= m;
     ll res = 1;
     while (e > 0) {
-        if (e & 1) res = (res * a) % m;
-        a = (a * a) % m;
+        if (e & 1) res = (res * vec) % m;
+        vec = (vec * vec) % m;
         e >>= 1;
     }
     return res;
 }
 
 // -------- Fermat Little Theorem (mod inverse) --------
-ll modinv(ll a, ll m = MOD) {
-    return modpow(a, m - 2, m);
+ll modinv(ll vec, ll m = MOD) {
+    return modpow(vec, m - 2, m);
 }
 
 // -------- Number of Divisors --------
@@ -84,30 +84,30 @@ ll countDivisors(ll n) {
 // -------- Combinatorics --------
 vll fact, invfact;
 
-void init_combinatorics(int n = MAXN) {
+void init_combinatorics(ll n = MAXN) {
     fact.assign(n + 1, 1);
-    for (int i = 1; i <= n; ++i)
+    for (ll i = 1; i <= n; ++i)
         fact[i] = fact[i - 1] * i % MOD;
 
     invfact.assign(n + 1, 1);
     invfact[n] = modinv(fact[n]);
-    for (int i = n; i >= 1; --i)
+    for (ll i = n; i >= 1; --i)
         invfact[i - 1] = invfact[i] * i % MOD;
 }
 
-ll nCr(int n, int r) {
+ll nCr(ll n, ll r) {
     if (r < 0 || r > n) return 0;
     return fact[n] * invfact[r] % MOD * invfact[n - r] % MOD;
 }
 
 // -------- Prime Factor Sieve --------
-vector<vector<int>> pf;
+vector<vector<ll>> pf;
 
-void init_prime_factors(int N = 200000) {
+void init_prime_factors(ll N = 200000) {
     pf.assign(N + 1, {});
-    for (int i = 2; i <= N; i++) {
+    for (ll i = 2; i <= N; i++) {
         if (pf[i].empty()) {
-            for (int j = i; j <= N; j += i)
+            for (ll j = i; j <= N; j += i)
                 pf[j].push_back(i);
         }
     }
@@ -117,38 +117,24 @@ void init_prime_factors(int N = 200000) {
 void solve() {
     ll n;
     cin>>n;
-    vector<vll> vec(n);
-    rep(i,0,n){
-        ll l,r;
-        cin>>l>>r;
-        vec[i].pb(l);
-        vec[i].pb(r);
-        vec[i].pb(i);
-    }
-    stv(vec);
-    ll m1=vec[0][1];
-    vll ans(n,0);
-    ans[vec[0][2]]=1;
-    rep(i,1,n){
-        if(vec[i][0]<=m1){
-            m1=max(m1,vec[i][1]);
-            ans[vec[i][2]]=1;
-        }else{
-            ans[vec[i][2]]=2;
+    vll vec(n);
+    vin(vec,n);
+    ll lst = -1;
+    ll ans = n;
+    ll i=0;
+       while (i < n) {
+            if (vec[i] == vec[0]) {
+                ll cnt = 0;
+                while (i < n && vec[i] == vec[0]) {
+                    cnt++;
+                    i++;
+                }
+                ans = min(ans, cnt);
+            } else {
+                i++;
+            }
         }
-    }
-    bool b=false;
-    rep(i,0,n){
-        if(ans[i]==2){
-            b=true;
-        }
-    }
-    if(!b){
-        prt(-1);
-    }else{
-        vout(ans);
-    }
-
+        (ans==n)?prt(-1):prt(ans);
 }
 
 int main() {

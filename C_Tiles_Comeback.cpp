@@ -115,40 +115,40 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    ll n;
-    cin>>n;
-    vector<vll> vec(n);
-    rep(i,0,n){
-        ll l,r;
-        cin>>l>>r;
-        vec[i].pb(l);
-        vec[i].pb(r);
-        vec[i].pb(i);
-    }
-    stv(vec);
-    ll m1=vec[0][1];
-    vll ans(n,0);
-    ans[vec[0][2]]=1;
-    rep(i,1,n){
-        if(vec[i][0]<=m1){
-            m1=max(m1,vec[i][1]);
-            ans[vec[i][2]]=1;
+    ll n,k;
+    cin>>n>>k;
+    vll vec(n);
+    vin(vec,n);
+    if(vec[0]==vec[n-1]){
+        ll cnt=0;
+        rep(i,0,n){
+            if(vec[i]==vec[0]){
+                cnt++;
+            }
+        }
+        if(cnt<k){
+            NO;
         }else{
-            ans[vec[i][2]]=2;
+            YES;
         }
-    }
-    bool b=false;
-    rep(i,0,n){
-        if(ans[i]==2){
-            b=true;
-        }
-    }
-    if(!b){
-        prt(-1);
     }else{
-        vout(ans);
+       ll cnt=0;
+        rep(i,0,n){
+            if(vec[i]==vec[0] && cnt<k){
+               // cout<<i<<endl;
+                cnt++;
+            }
+            if(vec[i]==vec[n-1] && cnt>=k){
+               // cout<<i<<endl;
+                cnt++;
+            }
+        }
+        if(cnt<(2*k)){
+            NO;
+        }else{
+            YES;
+        }
     }
-
 }
 
 int main() {

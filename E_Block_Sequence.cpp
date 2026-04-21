@@ -119,39 +119,19 @@ void solve() {
     cin>>n;
     vll vec(n);
     vin(vec,n);
-    ll ans=0;
-    ll i=0;
-    while (i<n)
-    {
-        ll val=vec[i];
-        if((i+val)>=n){
-            //cout<<i<<endl;
-            ans++;
-            i++;
-        }else{
-            i+=val+1;
+    vll vec2(n,0);
+    rev(i,n-2,0){
+       if((i+vec[i])<n){
+        ll val=0;
+        if((i+vec[i]+1)<n){
+            val=vec2[i+vec[i]+1];
         }
+        vec2[i]=max(vec2[i+1],val+vec[i]+1);
+       }else{
+        vec2[i]=vec2[i+1];
+       }
     }
-    
-    ll del=0;
-    rep(j,1,n){
-        del=j;
-        if(del>ans){
-            break;
-        }
-        ll k=j;
-        while(k<n){
-            ll val=vec[k];
-            if((k+val)>=n){
-                del++;
-                k++;
-            }else{
-                k+=val+1;
-            }
-        }
-        chmin(ans,del);
-    }
-    prt(ans);
+    prt(n-vec2[0]);
 }
 
 int main() {

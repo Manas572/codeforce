@@ -117,38 +117,47 @@ void init_prime_factors(int N = 200000) {
 void solve() {
     ll n;
     cin>>n;
-    vector<vll> vec(n);
-    rep(i,0,n){
-        ll l,r;
-        cin>>l>>r;
-        vec[i].pb(l);
-        vec[i].pb(r);
-        vec[i].pb(i);
-    }
+    vll vec(n);
+    vin(vec,n);
     stv(vec);
-    ll m1=vec[0][1];
-    vll ans(n,0);
-    ans[vec[0][2]]=1;
-    rep(i,1,n){
-        if(vec[i][0]<=m1){
-            m1=max(m1,vec[i][1]);
-            ans[vec[i][2]]=1;
+    ll l=0,r=n-1;
+    ll x=0;
+    ll ans=0;
+    while(l<r){
+     if(x+vec[l]<vec[r]){
+        x+=vec[l];
+        ans+=vec[l];
+        l++;
+     }else if(x+vec[l]==vec[r]){
+        ans+=vec[l];
+        x=0;
+        r--;
+        ans++;
+        l++;
+     }else{
+        ll rem=x+vec[l]-vec[r];
+        ll tinc=vec[l]-rem;
+        vec[l]=rem;
+        x=0;
+        r--;
+        ans+=tinc;
+        ans++;
+     }
+    }
+    if(l==r){
+        if(x>=vec[r]){
+            ans+=1;
         }else{
-            ans[vec[i][2]]=2;
+            if(vec[r]==1){
+                ans+=1;
+            }else{
+                ll val=(x+vec[r]+1)/2;
+        ans+=val-x;
+        ans+=1;
+            }
         }
     }
-    bool b=false;
-    rep(i,0,n){
-        if(ans[i]==2){
-            b=true;
-        }
-    }
-    if(!b){
-        prt(-1);
-    }else{
-        vout(ans);
-    }
-
+    prt(ans);
 }
 
 int main() {

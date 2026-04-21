@@ -115,11 +115,27 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
+    ll a,b,c,n;
+    cin>>a>>b>>c>>n;
+    vll vec;
+    ll v=gcdll(a,n);
+    n=n/v;
+    vec.pb(v-1);
+     v=gcdll(b,n);
+    n=n/v;
+    vec.pb(v-1);
+     v=gcdll(c,n);
+    n=n/v;
+    vec.pb(v-1);
+    if(n>1){
+        prt(-1);
+        return;
+    }
+    vout(vec);
 }
 
 int main() {
     fast_io;
-    tc solve();
+     solve();
     return 0;
 }
