@@ -113,78 +113,90 @@ void init_prime_factors(int N = 200000) {
     }
 }
 
-ll findp(vector<ll>& parent, ll x) {
-    if (parent[x] == x) return x;
-    return parent[x] = findp(parent, parent[x]);
-}
- 
-void unite(ll x, ll y, vector<ll>& parent, vector<ll>& rank) {
-    ll px = findp(parent, x);
-    ll py = findp(parent, y);
-    if (px == py) return;
-    if (rank[px] > rank[py]) {
-        parent[py] = px;
-    } else if (rank[py] > rank[px]) {
-        parent[px] = py;
-    } else {
-        parent[py] = px;
-        rank[px]++;
-    }
-}
- 
-void fun(vector<bool>&vis,map<ll,vll>& mp,ll i,vll& parent,vll& rank){
-    vis[i]=true;
-    rep(j,0,mp[i].size()){
-        if(!vis[mp[i][j]]){
-            unite(i,mp[i][j],parent,rank);
-            vis[mp[i][j]]=true;
-            fun(vis,mp,mp[i][j],parent,rank);
-        }
-    }
-}
-ll fun2(ll n,ll k){
-    ll val=n;
-    rep(i,1,k){
-        val=(val*n)%MOD;
-    }
-    return val;
-}
 // -------- Solve --------
 void solve() {
-    ll n,k;
-    cin>>n>>k;
-    map<ll,vll> mp;
-    rep(i,0,n-1){
-        ll u,v,type;
-        cin>>u>>v>>type;
-        if(type==0){
-            mp[u].pb(v);
-            mp[v].pb(u);
+    ll n,m,x;
+    cin>>n>>m>>x;
+    queue<ll> q;
+    q.push(x);
+    queue<ll> ans;
+    ll i=0;
+    while (i<m)
+    {
+        ll d;
+        char c;
+        set<ll> s;
+        cin>>d>>c;
+        d=d%n;
+        ll sz=q.size();
+        rep(i,0,sz){
+            ll val=q.front();
+            q.pop();
+            if(c=='0'){
+               ll val3= (val+d)%n;
+                if(val3==0){
+                    val3=n;
+                }
+                if(s.insert(val3).second){
+                    q.push(val3);
+                }
+            }else if(c=='1'){
+                ll val2=(val-d+n)%n;
+                if(val2==0){
+                    val2=n;
+                }
+                if(s.insert(val2).second){
+                    q.push(val2);
+                }
+            }else{
+                ll val3= (val+d)%n;
+                if(val3==0){
+                    val3=n;
+                }
+                if(s.insert(val3).second){
+                    q.push(val3);
+                }
+                ll val2=(val-d+n)%n;
+                if(val2==0){
+                    val2=n;
+                }
+                if(s.insert(val2).second){
+                    q.push(val2);
+                }
+            }
         }
-    }
-    vector<bool>vis (n+1,false);
-    map<ll,vll> comp;
-     vector<ll> parent(n+1), rank(n+1, 0);
-    rep(i, 0, n+1) parent[i] = i;
- 
-    rep(i,1,n+1){
-        if(!vis[i]){
-            fun(vis,mp,i,parent,rank);
+        if(i==m-1){
+            ans=q;
+            break;
+        }else{
+            i++;
         }
+    // ans=q;
+    // prt(i);
+    // while (!ans.empty())
+    // {
+    //     cout<<ans.front()<<" ";
+    //     ans.pop();
+    // }
+    // cout<<endl;
+    // i++;
     }
-    map<ll,ll> cnt;
-    rep(i,1,n+1){
-        cnt[findp(parent,i)]++;
+    prt(ans.size());
+    vll vec;
+    while (!ans.empty())
+    {
+        vec.pb(ans.front());
+        ans.pop();
     }
-    ll val=(fun2(n,k))%MOD;
-    for(auto x:cnt){
-        val=((val%MOD)-(fun2(x.second,k)%MOD)+MOD)%MOD;
-    }
-    prt(val);
+    stv(vec);
+    vout(vec);
+    
+   
+    
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

@@ -113,78 +113,101 @@ void init_prime_factors(int N = 200000) {
     }
 }
 
-ll findp(vector<ll>& parent, ll x) {
-    if (parent[x] == x) return x;
-    return parent[x] = findp(parent, parent[x]);
-}
- 
-void unite(ll x, ll y, vector<ll>& parent, vector<ll>& rank) {
-    ll px = findp(parent, x);
-    ll py = findp(parent, y);
-    if (px == py) return;
-    if (rank[px] > rank[py]) {
-        parent[py] = px;
-    } else if (rank[py] > rank[px]) {
-        parent[px] = py;
-    } else {
-        parent[py] = px;
-        rank[px]++;
+bool fun(ll mid,vll &vec,ll k,ll x,ll t1,ll y,ll t2,ll c){
+    ll r=vec.size()-1;
+    ll i1=c;
+    while(r>=0 && i1<=mid){
+       ll n2=vec[r]/100;
+       k-=n2*x;
+       k-=n2*y;
+        r--;
+        i1+=c;
     }
-}
- 
-void fun(vector<bool>&vis,map<ll,vll>& mp,ll i,vll& parent,vll& rank){
-    vis[i]=true;
-    rep(j,0,mp[i].size()){
-        if(!vis[mp[i][j]]){
-            unite(i,mp[i][j],parent,rank);
-            vis[mp[i][j]]=true;
-            fun(vis,mp,mp[i][j],parent,rank);
+    if(y>x){
+        ll i2=t2;
+        while(r>=0 && i2<=mid){
+            if((i2%c)==0){
+                i2+=t2;
+                continue;
+            }
+            ll n2=vec[r]/100;
+            k-=n2*y;
+            r--;
+            i2+=t2;
+        }
+        i2=t1;
+        while(r>=0 && i2<=mid){
+            if((i2%c)==0){
+                i2+=t1;
+                continue;
+            }
+            ll n1=vec[r]/100;
+            k-=n1*x;
+            r--;
+            i2+=t1;
+        }
+        
+    }else{
+        ll  i2=t1;
+        while(r>=0 && i2<=mid){
+            if((i2%c)==0){
+                i2+=t1;
+                continue;
+            }
+            ll n2=vec[r]/100;
+            k-=n2*x;
+            r--;
+            i2+=t1;
+        }
+        i2=t2;
+        while(r>=0 && i2<=mid){
+            if((i2%c)==0){
+                i2+=t2;
+                continue;
+            }
+            ll n2=vec[r]/100;
+            k-=n2*y;
+            r--;
+            i2+=t2;
         }
     }
-}
-ll fun2(ll n,ll k){
-    ll val=n;
-    rep(i,1,k){
-        val=(val*n)%MOD;
+    if(k>0){
+        return false;
+    }else{
+        return true;
     }
-    return val;
+
 }
 // -------- Solve --------
 void solve() {
-    ll n,k;
-    cin>>n>>k;
-    map<ll,vll> mp;
-    rep(i,0,n-1){
-        ll u,v,type;
-        cin>>u>>v>>type;
-        if(type==0){
-            mp[u].pb(v);
-            mp[v].pb(u);
+    ll q;
+    cin>>q;
+    vll vec(q);
+    vin(vec,q);
+    ll x,t1;
+    cin>>x>>t1;
+    ll y,t2;
+    cin>>y>>t2;
+    ll k;
+    cin>>k;
+    ll l=1,r=q;
+    stv(vec);
+    ll ans=-1;
+    ll c=lcm(t1,t2);
+    while(l<=r){
+        ll mid=l+(r-l)/2;
+        if(fun(mid,vec,k,x,t1,y,t2,c)){
+            ans=mid;
+            r=mid-1;
+        }else{
+            l=mid+1;
         }
     }
-    vector<bool>vis (n+1,false);
-    map<ll,vll> comp;
-     vector<ll> parent(n+1), rank(n+1, 0);
-    rep(i, 0, n+1) parent[i] = i;
- 
-    rep(i,1,n+1){
-        if(!vis[i]){
-            fun(vis,mp,i,parent,rank);
-        }
-    }
-    map<ll,ll> cnt;
-    rep(i,1,n+1){
-        cnt[findp(parent,i)]++;
-    }
-    ll val=(fun2(n,k))%MOD;
-    for(auto x:cnt){
-        val=((val%MOD)-(fun2(x.second,k)%MOD)+MOD)%MOD;
-    }
-    prt(val);
+    prt(ans);
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

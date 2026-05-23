@@ -113,78 +113,63 @@ void init_prime_factors(int N = 200000) {
     }
 }
 
-ll findp(vector<ll>& parent, ll x) {
-    if (parent[x] == x) return x;
-    return parent[x] = findp(parent, parent[x]);
-}
- 
-void unite(ll x, ll y, vector<ll>& parent, vector<ll>& rank) {
-    ll px = findp(parent, x);
-    ll py = findp(parent, y);
-    if (px == py) return;
-    if (rank[px] > rank[py]) {
-        parent[py] = px;
-    } else if (rank[py] > rank[px]) {
-        parent[px] = py;
-    } else {
-        parent[py] = px;
-        rank[px]++;
-    }
-}
- 
-void fun(vector<bool>&vis,map<ll,vll>& mp,ll i,vll& parent,vll& rank){
-    vis[i]=true;
-    rep(j,0,mp[i].size()){
-        if(!vis[mp[i][j]]){
-            unite(i,mp[i][j],parent,rank);
-            vis[mp[i][j]]=true;
-            fun(vis,mp,mp[i][j],parent,rank);
-        }
-    }
-}
-ll fun2(ll n,ll k){
-    ll val=n;
-    rep(i,1,k){
-        val=(val*n)%MOD;
-    }
-    return val;
-}
 // -------- Solve --------
 void solve() {
-    ll n,k;
-    cin>>n>>k;
-    map<ll,vll> mp;
-    rep(i,0,n-1){
-        ll u,v,type;
-        cin>>u>>v>>type;
-        if(type==0){
-            mp[u].pb(v);
-            mp[v].pb(u);
+    ll n;
+    cin>>n;
+    vll vec(n);
+    vin(vec,n);
+    map<ll,pair<ll,ll>> mp;
+   rep(i,0,n){
+        if(mp.count(vec[i])){
+            ll ls=mp[vec[i]].second;
+            ll val=mp[vec[i]].first;
+            ll nv=max(val, i-ls); 
+            mp[vec[i]]={nv,i};
+        }else{
+            mp[vec[i]]={i+1,i}; 
         }
     }
-    vector<bool>vis (n+1,false);
-    map<ll,vll> comp;
-     vector<ll> parent(n+1), rank(n+1, 0);
-    rep(i, 0, n+1) parent[i] = i;
- 
-    rep(i,1,n+1){
-        if(!vis[i]){
-            fun(vis,mp,i,parent,rank);
+    
+    vpll fin;
+    for(auto x:mp){
+        ll fmg = max(x.second.first, n - x.second.second);
+        fin.pb({fmg, x.first});
+    }
+    stv(fin);
+    //  rep(i,0,fin.size()){
+    //     cout<<fin[i].first<<" "<<fin[i].second<<endl;
+    // }
+    map<ll,ll> ch;
+    rep(i,0,fin.size()){
+        if(ch.count(fin[i].first-1)){
+            ch[fin[i].first-1]=min(fin[i].second, ch[fin[i].first-1]); 
+        }else{
+            ch[fin[i].first-1]=fin[i].second;
         }
     }
-    map<ll,ll> cnt;
-    rep(i,1,n+1){
-        cnt[findp(parent,i)]++;
+    // cout<<endl<<endl;
+    // for(auto x:ch){
+    //     cout<<x.first<<" "<<x.second<<endl;
+    // }
+    vll ans(n,0);
+    ll val=INT_MAX;
+    rep(i,0,n){
+        if(ch.count(i)){
+           // cout<<i<<" "<<ch[i]<<endl;
+            val=min(val,ch[i]);
+        }
+        if(val==INT_MAX){
+            ans[i]=-1;
+        }else{
+            ans[i]=val;
+        }
     }
-    ll val=(fun2(n,k))%MOD;
-    for(auto x:cnt){
-        val=((val%MOD)-(fun2(x.second,k)%MOD)+MOD)%MOD;
-    }
-    prt(val);
+    vout(ans);
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }
