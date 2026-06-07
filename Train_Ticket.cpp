@@ -115,12 +115,25 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
+    string s;
+    cin>>s;
+    queue<ll> q;
+    q.push((ll)s[0]);
+    rep(i,1,4){
+        ll v=(ll)s[i];
+        while (!q.empty())
+        {
+            ll val=q.front();
+            q.pop();
+            q.push(val+v);
+            q.push(val-v);
+        }
+    }
     
-
 }
 
 int main() {
     fast_io;
-    solve();
+     solve();
     return 0;
 }

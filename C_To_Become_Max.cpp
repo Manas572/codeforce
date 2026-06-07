@@ -112,15 +112,52 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
+bool check(ll x,ll k,vll& vec){
+    ll n= vec.size();
+    for(int i=n-2;i>=0;i--){
+        ll ops=0;
+       ll val=x;
+       bool b=false;
+        for(int j=i;j<n;j++){
+           if(vec[j] >= val){
+                b = true;
+                break;
+            }
+            ops += val - vec[j];
+            if(ops > k) break;
+            val -= 1;
+        }     
 
+            if(b && ops<=k){
+                return true;
+            }
+        
+    }
+    return false;
+}
 // -------- Solve --------
 void solve() {
-    
-
+    ll n,k;
+    cin>>n>>k;
+    vll vec(n);
+    vin(vec,n);
+    ll l=vmax(vec);
+    ll r=l+k;
+    ll ans=l;
+    while(l<=r){
+        ll mid=l+(r-l)/2;
+        if(check(mid,k,vec)){
+            ans=mid;
+            l=mid+1;
+        }else{
+            r=mid-1;
+        }
+    }
+    prt(ans);
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

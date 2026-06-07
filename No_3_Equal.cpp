@@ -115,12 +115,35 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll n;
+    cin>>n;
+    string s;
+    cin>>s;
+    stack<char> st;
+    st.push(s[0]);
+    ll cnt=0;
+    rep(i,1,n){
+        char c= s[i];
+        if(!st.empty() && st.top()!=c){
+            while(!st.empty()){
+                st.pop();
+            }
+            st.push(c);
+        }else{
+            st.push(c);
+            if(st.size()==3){
+                st.pop();
+                st.pop();
+                st.pop();
+                cnt++;
+            }
+        }
+    }
+    prt(cnt);
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

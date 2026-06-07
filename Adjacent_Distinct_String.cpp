@@ -12,8 +12,8 @@
 #define rev(i, a, l) for (ll i = a; i >= l; --i)
 #define chmin(a, l) (a = std::min(a, l))
 #define chmax(a, l) (a = std::max(a, l))
-#define YES cout << "YES\n"
-#define NO cout << "NO\n"
+#define YES cout << "Yes\n"
+#define NO cout << "No\n"
 #define vmin(v) (*min_element(v.begin(), v.end()))
 #define vmax(v) (*max_element(v.begin(), v.end()))
 #define INF 1e18
@@ -115,12 +115,52 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    string s;
+    cin>>s;
+    vll vec(26,0);
+    for(char c:s){
+        vec[c-'a']++;
+    }
+    ll n=(s.size()+1)/2;
+    rep(i,0,26){
+        if(vec[i]>n){
+            NO;
+            return;
+        }
+    }
+    YES;
+    priority_queue<pair<ll,char>> pq;
+    rep(i,0,26){
+        if(vec[i]>0){
+            pq.push({vec[i],'a'+i});
+        }
+    }
+   string ans="";
+   while (!pq.empty())
+   {
+    auto p1=pq.top();
+    pq.pop();
+    ans+=p1.second;
+    p1.first--;
+    if(!pq.empty()){
+        auto p2=pq.top();
+        pq.pop();
+        ans+=p2.second;
+        p2.first--;
+        if(p2.first>0){
+            pq.push({p2.first,p2.second});
+        }
+    }
+    if(p1.first>0){
+        pq.push({p1.first,p1.second});
+    }
+   }
+   prt(ans);
+   
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

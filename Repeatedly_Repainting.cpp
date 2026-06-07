@@ -115,12 +115,19 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
+    ll r,c;
+    cin>>r>>c;
+    vector<string> vec;
+    rep(i,0,r){
+        string s;
+        cin>>s;
+        vec.pb(s);
+    }
     
-
 }
 
 int main() {
     fast_io;
-    solve();
+     solve();
     return 0;
 }

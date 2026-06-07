@@ -115,8 +115,20 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll n;
+    cin>>n;
+    vll vec(n);
+    vin(vec,n);
+    ll ans=32;
+    rep(i,0,n){
+        rep(j,0,32){
+            if(((vec[i]>>j)&1)==1){
+                chmin(ans,j);
+                break;
+            }
+        }
+    }
+    prt(ans);
 }
 
 int main() {

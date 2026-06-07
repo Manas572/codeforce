@@ -115,12 +115,27 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll n;
+    cin>>n;
+    ll ans=0;
+    rep(i,0,52){
+        ll val=1ll<<i;
+        ll range=2*val;
+        ll total=n+1;
+        ll val2=(total/range);
+        ans+=val2*val;
+        ll rem=total-val2*range;
+        rem-=val;
+        if(rem>0){
+            ans+=rem;
+        }
+     //   cout<<i<<" "<<val2<<" "<<rem<<endl;
+    }
+    prt(ans);
 }
 
 int main() {
     fast_io;
-    solve();
+     solve();
     return 0;
 }

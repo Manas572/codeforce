@@ -115,12 +115,15 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll a,b;
+    cin>>a>>b;
+    ll x=a&b;
+    ll ans=(a^x)+(b^x);
+    prt(ans);
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

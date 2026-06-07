@@ -1,12 +1,12 @@
 #include <bits/stdc++.h>
 #define fast_io ios::sync_with_stdio(false); cin.tie(nullptr);
-#define prt(x) cout << x << '\n'
+#define prt(l) cout << l << '\n'
 #define ll long long
 #define tc ll t; cin >> t; while(t--)
-#define vin(v, n) for (ll i = 0; i < n; ++i) cin >> v[i]
-#define vout(v) for (auto &x : v) cout << x << ' '; cout << '\n'
+#define vin(v, x) for (ll i = 0; i < x; ++i) cin >> v[i]
+#define vout(v) for (auto &l : v) cout << l << ' '; cout << '\n'
 #define pb push_back
-#define all(x) x.begin(), x.end()
+#define all(l) l.begin(), l.end()
 #define stv(v) sort(v.begin(), v.end())
 #define rep(i, a, l) for (ll i = a; i < l; ++i)
 #define rev(i, a, l) for (ll i = a; i >= l; --i)
@@ -65,39 +65,39 @@ ll modinv(ll a, ll m = MOD) {
 }
 
 // -------- Number of Divisors --------
-ll countDivisors(ll n) {
+ll countDivisors(ll x) {
     ll ans = 1;
-    for (ll i = 2; i * i <= n; ++i) {
-        if (n % i == 0) {
+    for (ll i = 2; i * i <= x; ++i) {
+        if (x % i == 0) {
             ll cnt = 0;
-            while (n % i == 0) {
-                n /= i;
+            while (x % i == 0) {
+                x /= i;
                 cnt++;
             }
             ans *= (cnt + 1);
         }
     }
-    if (n > 1) ans *= 2;
+    if (x > 1) ans *= 2;
     return ans;
 }
 
 // -------- Combinatorics --------
 vll fact, invfact;
 
-void init_combinatorics(int n = MAXN) {
-    fact.assign(n + 1, 1);
-    for (int i = 1; i <= n; ++i)
+void init_combinatorics(int x = MAXN) {
+    fact.assign(x + 1, 1);
+    for (int i = 1; i <= x; ++i)
         fact[i] = fact[i - 1] * i % MOD;
 
-    invfact.assign(n + 1, 1);
-    invfact[n] = modinv(fact[n]);
-    for (int i = n; i >= 1; --i)
+    invfact.assign(x + 1, 1);
+    invfact[x] = modinv(fact[x]);
+    for (int i = x; i >= 1; --i)
         invfact[i - 1] = invfact[i] * i % MOD;
 }
 
-ll nCr(int n, int r) {
-    if (r < 0 || r > n) return 0;
-    return fact[n] * invfact[r] % MOD * invfact[n - r] % MOD;
+ll nCr(int x, int r) {
+    if (r < 0 || r > x) return 0;
+    return fact[x] * invfact[r] % MOD * invfact[x - r] % MOD;
 }
 
 // -------- Prime Factor Sieve --------
@@ -115,12 +115,52 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
+    ll n, x, l; 
+    cin >> n >> x >> l;
+    string s;
+    cin >> s;
+    ll emp = x;
+    ll val1 = 0;
+    ll val2 = 0; 
+    ll ans = 0;
+    for (char c : s) {
+        if (c == 'I') {
+            if (emp > 0) {
+                emp--;
+                val1 += (l - 1);
+                ans++;
+            }
+        } else if (c == 'E') {
+            if (val1 > 0) {
+                val1--;
+                ans++;
+            } else if (val2 > 0 && emp > 0) {
+                val2--;
+                emp--;
+                val1 += l; 
+                val1--;
+                ans++;
+            }
+        } else if (c == 'A') {
+            if (val1 > 0) {
+                val1--;
+                ans++;
+                if (emp > 0) {
+                    val2++;
+                }
+            } else if (emp > 0) {
+                emp--;
+                val1 += (l - 1);
+                ans++;
+            }
+        }
+    }
     
-
+    prt(ans);
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

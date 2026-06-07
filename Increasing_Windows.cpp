@@ -17,7 +17,7 @@
 #define vmin(v) (*min_element(v.begin(), v.end()))
 #define vmax(v) (*max_element(v.begin(), v.end()))
 #define INF 1e18
-#define MOD 1000000007
+#define MOD 998244353
 #define MAXN 1000000
 
 using namespace std;
@@ -115,12 +115,28 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll n, k;
+    cin >> n >> k;
+    if(k==1){
+        prt(1);
+        return;
+    }
+    if (k == n) {
+        prt(modpow(n, n));
+        return;
+    }
+    ll ans = 0;
+    rep (l,2,n+1) {
+        ll val1 = modpow(l - 1, k);
+        ll val2 = nCr(n - l, n - k - 1);
+        ll val3 = (val1 * val2) % MOD;
+        ans = (ans + val3) % MOD;
+    }
+    prt(ans);
 }
-
 int main() {
     fast_io;
-    solve();
+    init_combinatorics(3000009);
+    tc solve();
     return 0;
 }

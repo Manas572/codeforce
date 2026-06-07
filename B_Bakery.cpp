@@ -112,15 +112,79 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+ll fun(ll source,vector<vpll>& mat,ll n){
+    vll dis(n,INT_MAX);
+    dis[source]=0;
+    priority_queue<pair<ll,ll>,vector<pair<ll,ll>>,greater<pair<ll,ll>>>pq;
+    pq.push({0,source});
+    while (!pq.empty())
+    {
+        ll d=pq.top().first;
+        ll node=pq.top().second;
+        pq.pop();
+        for(auto x:mat[node]){
+            ll wt=x.first;
+            ll node2=x.second;
+            if(d+wt<dis[node2]){
+                dis[node2]=d+wt;
+                pq.push({d+wt,node2});
+            }
+        }
+    }
+    ll ans=INT_MAX;
+    rep(i,0,n){
+        if(i==source){
+            continue;
+        }
+        chmin(ans,dis[i]);
+    }
+    if(ans==INT_MAX){
+        ans=-1;
+    }
+    return ans;
+    
+}
 // -------- Solve --------
 void solve() {
-    
+    ll n ,m,k;
+    cin >> n >> m >> k;
+    vector<vpll> mat(n);
+    rep(i,0,m){
+        ll u,v,w;
+        cin >> u >> v >> w;
+        u--;v--;
+        mat[u].pb({w,v});
+        mat[v].pb({w,u});
+    }
+    ll ans=INT_MAX;
+    vll bks;
+    map<ll,ll>mp;
+    while(k--){
+     ll bs;
+     cin>>bs;
+     bs--;
+     bks.pb(bs);
+     mp[bs]++;
+    }
 
+    rep(i,0,bks.size()){
+        ll val=bks[i];
+        for(auto x:mat[val]){
+            if(mp.count(x.second)){
+                continue;
+            }
+            chmin(ans,x.first);
+        }
+    }
+     if(ans==INT_MAX){
+        ans=-1;
+    }
+     prt(ans);
+    
 }
 
 int main() {
     fast_io;
-    solve();
+     solve();
     return 0;
 }

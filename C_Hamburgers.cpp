@@ -112,15 +112,75 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
+bool fun(ll mid,vll& cost,vll& avl,ll money,map<ll,ll>& mp){
+    ll bneed=mp['B']*mid;
+    ll sneed=mp['S']*mid;
+    ll cneed=mp['C']*mid;
+    bneed-=avl[0];
+    sneed-=avl[1];
+    cneed-=avl[2];
+    if(bneed>0){
+        ll c1=bneed*cost[0];
+        if(money<c1){
+            return false;
+        }
+        bneed=0;
+        money-=c1;
+    }
+     if(sneed>0){
+        ll c1=sneed*cost[1];
+        if(money<c1){
+            return false;
+        }
+        sneed=0;
+        money-=c1;
+    }
 
+     if(cneed>0){
+        ll c1=cneed*cost[2];
+        if(money<c1){
+            return false;
+        }
+        cneed=0;
+        money-=c1;
+    }
+    if(bneed>0 || sneed>0 || cneed>0){
+        return false;
+    }
+    return true;
+
+
+}
 // -------- Solve --------
 void solve() {
-    
-
+    string s;
+    cin>>s;
+    map<ll,ll> mp;
+    for(char c:s){
+        mp[c]++;
+    }
+    vll avl(3,0);
+    vin(avl,3);
+    vll cost(3,0);
+    vin(cost,3);
+    ll money;
+    cin>>money;
+    ll l=0,r=1e13;
+    ll ans=0;
+    while(l<=r){
+        ll mid=l+(r-l)/2;
+        if(fun(mid,cost,avl,money,mp)){
+            chmax(ans,mid);
+            l=mid+1;
+        }else{
+            r=mid-1;
+        }
+    }
+    prt(ans);
 }
 
 int main() {
     fast_io;
-    solve();
+     solve();
     return 0;
 }

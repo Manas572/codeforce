@@ -115,12 +115,16 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
+    ll x;
+    cin>>x;
+    string s="HelloWorld";
+    s.erase(s.begin()+(x-1));
+    prt(s);
 
 }
 
 int main() {
     fast_io;
-    solve();
+     solve();
     return 0;
 }

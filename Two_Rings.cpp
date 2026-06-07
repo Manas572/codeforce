@@ -115,12 +115,23 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll x1,y1,r1,x2,y2,r2;
+    cin>>x1>>y1>>r1>>x2>>y2>>r2;
+    ll val1=x2-x1;
+    ll val2=y2-y1;
+    val1=val1*val1;
+    val2=val2*val2;
+    ll val3=val1+val2;
+    ll val4=sqrt(val3);
+    if(val4==(r1+r2)){
+        YES;
+    }else{
+        NO;
+    }
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

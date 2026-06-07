@@ -115,12 +115,41 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
+    ll n,k;
+    cin>>n>>k;
+    vll vec(n);
+    vin(vec,n);
+    map<ll,ll> mp;
+    ll ans=0;
+    rep(j,0,n){
+        ll t=vec[j];
+         rep(i,0,64){
+            if(((t>>i)&1)==0){
+                mp[i]++;
+            }
+        }
+        ans += __builtin_popcountll(vec[j]);
+    }
+    for(auto x:mp){
+        ll val=1ll<<x.first;
+        ll val2=val*x.second;
+        if(val2<=k){
+            k-=val2;
+            ans+=x.second;
+        }else{
+            ll val3=k/val;
+            ans+=val3;
+            break;
+        }
+    }
     
+    prt(ans);
 
+    
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

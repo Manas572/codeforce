@@ -24,12 +24,9 @@ using namespace std;
 
 typedef vector<ll> vll;
 
-
 typedef pair<ll,ll> pll;
 
-
 typedef vector<pll> vpll;
-
 
 // -------- Custom gcd + lcm --------
 ll gcdll(ll a, ll b) {
@@ -84,30 +81,30 @@ ll countDivisors(ll n) {
 // -------- Combinatorics --------
 vll fact, invfact;
 
-void init_combinatorics(int n = MAXN) {
+void init_combinatorics(ll n = MAXN) {
     fact.assign(n + 1, 1);
-    for (int i = 1; i <= n; ++i)
+    for (ll i = 1; i <= n; ++i)
         fact[i] = fact[i - 1] * i % MOD;
 
     invfact.assign(n + 1, 1);
     invfact[n] = modinv(fact[n]);
-    for (int i = n; i >= 1; --i)
+    for (ll i = n; i >= 1; --i)
         invfact[i - 1] = invfact[i] * i % MOD;
 }
 
-ll nCr(int n, int r) {
+ll nCr(ll n, ll r) {
     if (r < 0 || r > n) return 0;
     return fact[n] * invfact[r] % MOD * invfact[n - r] % MOD;
 }
 
 // -------- Prime Factor Sieve --------
-vector<vector<int>> pf;
+vector<vector<ll>> pf;
 
-void init_prime_factors(int N = 200000) {
+void init_prime_factors(ll N = 200000) {
     pf.assign(N + 1, {});
-    for (int i = 2; i <= N; i++) {
+    for (ll i = 2; i <= N; i++) {
         if (pf[i].empty()) {
-            for (int j = i; j <= N; j += i)
+            for (ll j = i; j <= N; j += i)
                 pf[j].push_back(i);
         }
     }
@@ -115,12 +112,30 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll n;
+    cin>>n;
+    vll vec(n);
+    vin(vec,n);
+    stv(vec);
+    ll m = 1e10;
+        rep (i,0,n){
+            ll l = 0, r = 0;
+            ll mp=vec[i];
+            for (auto j : vec){
+                if(j<mp){
+                    l+=1;
+                }
+                if(j>mp){
+                    r+=1;
+                }
+        }
+        chmin(m,max(l,r));
+        }
+        prt(m);
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

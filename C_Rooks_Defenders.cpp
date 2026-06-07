@@ -12,8 +12,8 @@
 #define rev(i, a, l) for (ll i = a; i >= l; --i)
 #define chmin(a, l) (a = std::min(a, l))
 #define chmax(a, l) (a = std::max(a, l))
-#define YES cout << "YES\n"
-#define NO cout << "NO\n"
+#define YES cout << "Yes\n"
+#define NO cout << "No\n"
 #define vmin(v) (*min_element(v.begin(), v.end()))
 #define vmax(v) (*max_element(v.begin(), v.end()))
 #define INF 1e18
@@ -115,12 +115,52 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll n,q;
+    cin>>n>>q;
+    map<ll,ll> fx,fy;
+    while(q--){
+        ll t;
+        cin>>t;
+        if(t==1){
+            ll x,y;
+            cin>>x>>y;
+            fx[x]++;
+            fy[y]++;
+        }else if(t==2){
+            ll x,y;
+            cin>>x>>y;
+            fx[x]--;
+            fy[y]--;
+            if(fx[x]==0){
+                fx.erase(x);
+            }
+            if(fy[y]==0){
+                fy.erase(y);
+            }
+        }else{
+            ll x1,y1,x2,y2;
+            cin>>x1>>y1>>x2>>y2;
+            auto it=fx.lower_bound(x1);
+            if(it!=fx.end()){
+                if(it->first<=x2){
+                    YES;
+                   continue;
+                }
+            }
+            it=fy.lower_bound(y1);
+             if(it!=fy.end()){
+                if(it->first<=y2){
+                    YES;
+                    continue;
+                }
+            }
+            NO;
+        }
+    }
 }
 
 int main() {
     fast_io;
-    solve();
+     solve();
     return 0;
 }

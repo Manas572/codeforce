@@ -115,12 +115,18 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
+   ll n,q;
+   cin>>n>>q;
+    map<ll,ll> mp1,mp2;
+   while(q--){
+    ll x,y;
+    cin>>x>>y;
     
-
+   } 
 }
 
 int main() {
     fast_io;
-    solve();
+     solve();
     return 0;
 }

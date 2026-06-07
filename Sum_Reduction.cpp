@@ -12,8 +12,8 @@
 #define rev(i, a, l) for (ll i = a; i >= l; --i)
 #define chmin(a, l) (a = std::min(a, l))
 #define chmax(a, l) (a = std::max(a, l))
-#define YES cout << "YES\n"
-#define NO cout << "NO\n"
+#define YES cout << "Yes\n"
+#define NO cout << "No\n"
 #define vmin(v) (*min_element(v.begin(), v.end()))
 #define vmax(v) (*max_element(v.begin(), v.end()))
 #define INF 1e18
@@ -115,12 +115,23 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
-
+    ll n;
+    cin>>n;
+    vll vec(n);
+    vin(vec,n);
+    ll j=0;
+    rep(i,0,n){
+        if((vec[i]&j)!=0){
+            NO;
+            return;
+        }
+        j|=vec[i];
+    }
+    YES;
 }
 
 int main() {
     fast_io;
-    solve();
+    tc solve();
     return 0;
 }

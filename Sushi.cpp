@@ -115,8 +115,44 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
+    ll n,m;
+    cin>>n>>m;
+    vll a(n);
+    vin(a,n);
+    vll b(m);
+    vin(b,m);
+    priority_queue<ll,vector<ll>,greater<ll>> pqa;
+    priority_queue<ll,vector<ll>,greater<ll>> pqb;
+    rep(i,0,n){
+        pqa.push(a[i]);
+    }
+    rep(i,0,m){
+        pqb.push(b[i]);
+    }
+    ll c=0;
+    while (!pqa.empty())
+    {
+        ll v=pqa.top();
+        pqa.pop();
+        ll av=2*v;
+        ll ans=-1;
+        while (!pqb.empty())
+        {
+         ll val2=pqb.top();
+         if(val2<=av){
+            ans=val2;
+            pqb.pop();
+            break;
+         }   else{
+            break;
+         }
+        }
+        if(ans!=-1){
+            c+=1;
+        }
+    }
+    prt(c);
     
-
 }
 
 int main() {

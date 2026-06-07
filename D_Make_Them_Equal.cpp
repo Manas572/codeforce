@@ -114,13 +114,45 @@ void init_prime_factors(int N = 200000) {
 }
 
 // -------- Solve --------
-void solve() {
-    
+void solve(vll &steps) {
+    ll n, k;
+    cin >> n >> k;
+    vll b(n), c(n);
+    vin(b, n);
+    vin(c, n);
+    vll cost(n);
+    rep (i,0,n) {
+        cost[i] = steps[b[i]];
+    }
+    k = min(k, 13000LL);
+    vll dp(k+1,0);
+   rep(i,0,n){
+    auto tdp = dp;
+    for(int j = 0; j <= k; j++){
+        if(j >= cost[i]){
+            chmax(tdp[j],dp[j - cost[i]] + c[i]);
+        }
+    }
+    dp = tdp;
+}
 
+    prt(vmax(dp));
 }
 
 int main() {
     fast_io;
-    solve();
+    vll steps(1001,INT_MAX);
+    steps[0]=0;
+    steps[1]=0;
+    rep(i,1,1001){
+        rep(j,1,i+1){
+            ll val=i+i/j;
+           if(val<=1000){
+             steps[val]=min(steps[val],steps[i]+1);
+           }
+        }
+    }
+    //vout(steps);
+    tc solve(steps);
     return 0;
 }
