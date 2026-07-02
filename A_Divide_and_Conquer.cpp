@@ -115,93 +115,17 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    ll r,c;
-    cin>>r>>c;
-    vector<string> vec;
-    rep(i,0,r){
-        string s;
-        cin>>s;
-        vec.pb(s);
+    ll x,y;
+    cin>>x>>y;
+    if((x%y)==0){
+        YES;
+    }else{
+        NO;
     }
-    vector<vll> mat(r,vll(c,-1));
-    queue<pll> q;
-    //0 even parity 1 odd parity
-        rep(i,0,r){
-        rep(j,0,c){
-            string s=vec[i];
-            if(s[j]=='#'){
-                q.push({i,j});
-                mat[i][j]=0;
-            }
-        }
-    }
-    if(q.size()==(r*c)){
-        for(int i=0;i<r;i++){
-            for(int j=0;j<c;j++){
-                cout<<'.';
-            }
-            cout<<endl;
-        }
-        return;
-    }
-    ll lvl=1;
-    while (!q.empty())
-    {
-        int n=q.size();
-        rep(i,0,n){
-            auto [r1,c1]=q.front();
-            q.pop();
-            if(r1+1<r && mat[r1+1][c1]==-1){
-                mat[r1+1][c1]=lvl&1;
-                q.push({r1+1,c1});
-            }
-            if(r1-1>=0 && mat[r1-1][c1]==-1){
-                mat[r1-1][c1]=lvl&1;
-                q.push({r1-1,c1});
-            }
-            if(c1+1<c && mat[r1][c1+1]==-1){
-                mat[r1][c1+1]=lvl&1;
-                q.push({r1,c1+1});
-            }
-            if(c1-1>=0 && mat[r1][c1-1]==-1){
-                mat[r1][c1-1]=lvl&1;
-                q.push({r1,c1-1});
-            }
-            if(r1+1<r && c1+1<c && mat[r1+1][c1+1]==-1){
-                mat[r1+1][c1+1]=lvl&1;
-                q.push({r1+1,c1+1});
-            }
-            if(r1-1>=0 && c1-1>=0 && mat[r1-1][c1-1]==-1){
-                mat[r1-1][c1-1]=lvl&1;
-                q.push({r1-1,c1-1});
-            }
-            if(r1-1>=0 && c1+1<c && mat[r1-1][c1+1]==-1){
-                mat[r1-1][c1+1]=lvl&1;
-                q.push({r1-1,c1+1});
-            }
-            if(r1+1<r && c1-1>=0 && mat[r1+1][c1-1]==-1){
-                mat[r1+1][c1-1]=lvl&1;
-                q.push({r1+1,c1-1});
-            }
-        }
-        lvl++;
-    }
-    for(int i=0;i<r;i++){
-       for(int j=0;j<c;j++){
-         if(mat[i][j]==0){
-            cout<<'#';
-        }else{
-            cout<<'.';
-        }
-       }
-       cout<<endl;
-    }
-    
-
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

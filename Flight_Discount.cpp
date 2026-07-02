@@ -115,87 +115,44 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    ll r,c;
-    cin>>r>>c;
-    vector<string> vec;
-    rep(i,0,r){
-        string s;
-        cin>>s;
-        vec.pb(s);
+    ll n,m;
+    cin>>n>>m;
+    map<ll,vpll> mp;
+    rep(i,0,m){
+        ll a,b,c;
+        cin>>a>>b>>c;
+        mp[a].pb({b,c});
     }
-    vector<vll> mat(r,vll(c,-1));
-    queue<pll> q;
-    //0 even parity 1 odd parity
-        rep(i,0,r){
-        rep(j,0,c){
-            string s=vec[i];
-            if(s[j]=='#'){
-                q.push({i,j});
-                mat[i][j]=0;
-            }
-        }
-    }
-    if(q.size()==(r*c)){
-        for(int i=0;i<r;i++){
-            for(int j=0;j<c;j++){
-                cout<<'.';
-            }
-            cout<<endl;
-        }
-        return;
-    }
-    ll lvl=1;
-    while (!q.empty())
+    vector<vll> dis(n+1,vll(2,INF));
+    dis[1][0]=0;
+    priority_queue<vll,vector<vll>,greater<vll>> pq;
+    pq.push({0,1,0});
+    while (!pq.empty())
     {
-        int n=q.size();
-        rep(i,0,n){
-            auto [r1,c1]=q.front();
-            q.pop();
-            if(r1+1<r && mat[r1+1][c1]==-1){
-                mat[r1+1][c1]=lvl&1;
-                q.push({r1+1,c1});
-            }
-            if(r1-1>=0 && mat[r1-1][c1]==-1){
-                mat[r1-1][c1]=lvl&1;
-                q.push({r1-1,c1});
-            }
-            if(c1+1<c && mat[r1][c1+1]==-1){
-                mat[r1][c1+1]=lvl&1;
-                q.push({r1,c1+1});
-            }
-            if(c1-1>=0 && mat[r1][c1-1]==-1){
-                mat[r1][c1-1]=lvl&1;
-                q.push({r1,c1-1});
-            }
-            if(r1+1<r && c1+1<c && mat[r1+1][c1+1]==-1){
-                mat[r1+1][c1+1]=lvl&1;
-                q.push({r1+1,c1+1});
-            }
-            if(r1-1>=0 && c1-1>=0 && mat[r1-1][c1-1]==-1){
-                mat[r1-1][c1-1]=lvl&1;
-                q.push({r1-1,c1-1});
-            }
-            if(r1-1>=0 && c1+1<c && mat[r1-1][c1+1]==-1){
-                mat[r1-1][c1+1]=lvl&1;
-                q.push({r1-1,c1+1});
-            }
-            if(r1+1<r && c1-1>=0 && mat[r1+1][c1-1]==-1){
-                mat[r1+1][c1-1]=lvl&1;
-                q.push({r1+1,c1-1});
-            }
+        auto vec=pq.top();
+        pq.pop();
+        if(vec[0]>dis[vec[1]][vec[2]]){
+            continue;
         }
-        lvl++;
-    }
-    for(int i=0;i<r;i++){
-       for(int j=0;j<c;j++){
-         if(mat[i][j]==0){
-            cout<<'#';
+        for(int i=0;i<mp[vec[1]].size();i++){
+            if(vec[2]==0){
+            if(vec[0]+mp[vec[1]][i].second<dis[mp[vec[1]][i].first][vec[2]]){
+                dis[mp[vec[1]][i].first][vec[2]]=vec[0]+mp[vec[1]][i].second;
+                pq.push({vec[0]+mp[vec[1]][i].second,mp[vec[1]][i].first,0});
+            }
+            if(vec[0]+(mp[vec[1]][i].second/2)<dis[mp[vec[1]][i].first][1]){
+                dis[mp[vec[1]][i].first][1]=vec[0]+(mp[vec[1]][i].second/2);
+                pq.push({vec[0]+(mp[vec[1]][i].second/2),mp[vec[1]][i].first,1});
+            }
         }else{
-            cout<<'.';
+           if(vec[0]+mp[vec[1]][i].second<dis[mp[vec[1]][i].first][vec[2]]){
+                dis[mp[vec[1]][i].first][vec[2]]=vec[0]+mp[vec[1]][i].second;
+                pq.push({vec[0]+mp[vec[1]][i].second,mp[vec[1]][i].first,1});
+            } 
         }
-       }
-       cout<<endl;
+        } 
     }
+    prt(min(dis[n][0],dis[n][1]));
     
 
 }

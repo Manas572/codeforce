@@ -115,7 +115,30 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    
+    ll h,w,q;
+    cin>>h>>w>>q;
+    map<ll,char> mp;
+    mp[0]='A';
+    vector<vll> mat(h+1, vll(w+1,0));
+    rep(i,1,q+1){
+        ll r,c;
+        cin>>r>>c;
+        char ch;
+        cin>>ch;
+        mp[i]=ch;
+        mat[r-1][c-1]=i;
+    }
+    for(int i=h-1;i>=0;i--){
+        for(int j=w-1;j>=0;j--){
+            mat[i][j]=max({mat[i][j],mat[i+1][j],mat[i][j+1]});
+        }
+    }
+   for(int i=0;i<h;i++){
+    for(int j=0;j<w;j++){
+        cout<<mp[mat[i][j]];
+    }
+    cout<<endl;
+   }
 }
 
 int main() {

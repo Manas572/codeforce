@@ -115,89 +115,50 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-    ll r,c;
-    cin>>r>>c;
-    vector<string> vec;
-    rep(i,0,r){
+    ll h,w,k;
+    cin>>h>>w>>k;
+    ll ans=0;
+    vector<vll> mat(h,vll(w,0));
+    rep(i,0,h){
         string s;
         cin>>s;
-        vec.pb(s);
-    }
-    vector<vll> mat(r,vll(c,-1));
-    queue<pll> q;
-    //0 even parity 1 odd parity
-        rep(i,0,r){
-        rep(j,0,c){
-            string s=vec[i];
-            if(s[j]=='#'){
-                q.push({i,j});
-                mat[i][j]=0;
-            }
+        rep(j,0,w){
+            ll val=s[j]-'0';
+            mat[i][j]=val;
         }
     }
-    if(q.size()==(r*c)){
-        for(int i=0;i<r;i++){
-            for(int j=0;j<c;j++){
-                cout<<'.';
-            }
-            cout<<endl;
-        }
-        return;
+    vector<vll> pre(w,vll(h,0));
+  rep(j,0,w){
+    ll cs=0;
+    rep(i,0,h){
+        cs+=mat[i][j];
+        pre[j][i]=cs;
     }
-    ll lvl=1;
-    while (!q.empty())
-    {
-        int n=q.size();
-        rep(i,0,n){
-            auto [r1,c1]=q.front();
-            q.pop();
-            if(r1+1<r && mat[r1+1][c1]==-1){
-                mat[r1+1][c1]=lvl&1;
-                q.push({r1+1,c1});
+  }
+  for(int i=0;i<h;i++){
+    for(int j=i;j<h;j++){
+        vll  sq(w,0);
+        for(int k=0;k<w;k++){
+            ll val=0;
+            if(i!=0){
+                val=pre[k][i-1];
             }
-            if(r1-1>=0 && mat[r1-1][c1]==-1){
-                mat[r1-1][c1]=lvl&1;
-                q.push({r1-1,c1});
-            }
-            if(c1+1<c && mat[r1][c1+1]==-1){
-                mat[r1][c1+1]=lvl&1;
-                q.push({r1,c1+1});
-            }
-            if(c1-1>=0 && mat[r1][c1-1]==-1){
-                mat[r1][c1-1]=lvl&1;
-                q.push({r1,c1-1});
-            }
-            if(r1+1<r && c1+1<c && mat[r1+1][c1+1]==-1){
-                mat[r1+1][c1+1]=lvl&1;
-                q.push({r1+1,c1+1});
-            }
-            if(r1-1>=0 && c1-1>=0 && mat[r1-1][c1-1]==-1){
-                mat[r1-1][c1-1]=lvl&1;
-                q.push({r1-1,c1-1});
-            }
-            if(r1-1>=0 && c1+1<c && mat[r1-1][c1+1]==-1){
-                mat[r1-1][c1+1]=lvl&1;
-                q.push({r1-1,c1+1});
-            }
-            if(r1+1<r && c1-1>=0 && mat[r1+1][c1-1]==-1){
-                mat[r1+1][c1-1]=lvl&1;
-                q.push({r1+1,c1-1});
-            }
+                sq[k]=pre[k][j]-val;
         }
-        lvl++;
-    }
-    for(int i=0;i<r;i++){
-       for(int j=0;j<c;j++){
-         if(mat[i][j]==0){
-            cout<<'#';
-        }else{
-            cout<<'.';
+        // now will do subarray sum equal k 
+        map<ll,ll> umap;
+        umap[0]++;
+        ll cs=0;
+        for(int a=0;a<w;a++){
+            cs+=sq[a];
+            if(umap.count(cs-k)){
+                ans+=umap[cs-k];
+            }
+            umap[cs]++;
         }
-       }
-       cout<<endl;
     }
-    
-
+  }
+  prt(ans);
 }
 
 int main() {

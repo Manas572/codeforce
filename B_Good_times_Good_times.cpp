@@ -112,96 +112,70 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+unordered_set<ll> check(ll x){
+    unordered_set<ll> s;
+    while(x){
+        s.insert(x%10);
+        x=x/10;
+    }
+    return s;
+}
+vll y;
+void fun(){
+    vll num;
+    queue<ll> q;
+    rep(i,0,10){
+        num.pb(i);
+        if(i>=1){
+            q.push(i);
+        }
+    }
+    while(!q.empty()){
+        ll s=q.size();
+        rep(i,0,s){
+            ll val=q.front();
+            if(val>1){
+                y.pb(val);
+            }
+            q.pop();
+            auto s=check(val);
+            if(s.size()==1){
+               rep(j,0,num.size()){
+                 ll val2=val*10+num[j];
+                 if(val2<=1e9){
+                    q.push(val2);
+                 }
+               }
+            }else if(s.size()==2){
+                vll vec2;
+                for(auto x:s){
+                    vec2.pb(x);
+                }
+                rep(k,0,2){
+                    ll val2=val*10+vec2[k];
+                    if(val2<=1e9){
+                        q.push(val2);
+                    }
+                }
+            }
+        }
+    }
+}
 // -------- Solve --------
 void solve() {
-    ll r,c;
-    cin>>r>>c;
-    vector<string> vec;
-    rep(i,0,r){
-        string s;
-        cin>>s;
-        vec.pb(s);
+    ll x;
+    cin>>x;
+    ll tp=x/10;
+    ll c=10;
+    while(tp>0){
+        c=c*10;
+        tp=tp/10;
     }
-    vector<vll> mat(r,vll(c,-1));
-    queue<pll> q;
-    //0 even parity 1 odd parity
-        rep(i,0,r){
-        rep(j,0,c){
-            string s=vec[i];
-            if(s[j]=='#'){
-                q.push({i,j});
-                mat[i][j]=0;
-            }
-        }
-    }
-    if(q.size()==(r*c)){
-        for(int i=0;i<r;i++){
-            for(int j=0;j<c;j++){
-                cout<<'.';
-            }
-            cout<<endl;
-        }
-        return;
-    }
-    ll lvl=1;
-    while (!q.empty())
-    {
-        int n=q.size();
-        rep(i,0,n){
-            auto [r1,c1]=q.front();
-            q.pop();
-            if(r1+1<r && mat[r1+1][c1]==-1){
-                mat[r1+1][c1]=lvl&1;
-                q.push({r1+1,c1});
-            }
-            if(r1-1>=0 && mat[r1-1][c1]==-1){
-                mat[r1-1][c1]=lvl&1;
-                q.push({r1-1,c1});
-            }
-            if(c1+1<c && mat[r1][c1+1]==-1){
-                mat[r1][c1+1]=lvl&1;
-                q.push({r1,c1+1});
-            }
-            if(c1-1>=0 && mat[r1][c1-1]==-1){
-                mat[r1][c1-1]=lvl&1;
-                q.push({r1,c1-1});
-            }
-            if(r1+1<r && c1+1<c && mat[r1+1][c1+1]==-1){
-                mat[r1+1][c1+1]=lvl&1;
-                q.push({r1+1,c1+1});
-            }
-            if(r1-1>=0 && c1-1>=0 && mat[r1-1][c1-1]==-1){
-                mat[r1-1][c1-1]=lvl&1;
-                q.push({r1-1,c1-1});
-            }
-            if(r1-1>=0 && c1+1<c && mat[r1-1][c1+1]==-1){
-                mat[r1-1][c1+1]=lvl&1;
-                q.push({r1-1,c1+1});
-            }
-            if(r1+1<r && c1-1>=0 && mat[r1+1][c1-1]==-1){
-                mat[r1+1][c1-1]=lvl&1;
-                q.push({r1+1,c1-1});
-            }
-        }
-        lvl++;
-    }
-    for(int i=0;i<r;i++){
-       for(int j=0;j<c;j++){
-         if(mat[i][j]==0){
-            cout<<'#';
-        }else{
-            cout<<'.';
-        }
-       }
-       cout<<endl;
-    }
-    
-
+    prt(c+1);
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }
