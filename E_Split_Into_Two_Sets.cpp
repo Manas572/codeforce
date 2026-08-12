@@ -113,32 +113,84 @@ void init_prime_factors(int N = 200000) {
     }
 }
 
+void dfs(ll node,map<ll,vll>& mp,vpll& vec,vll& vis,ll c,bool &b){
+    if(vis[node]!=-1){
+        return;
+    }
+    vis[node]=c;
+    for(int i=0;i<mp[vec[node].first].size();i++){
+        if(mp[vec[node].first][i]==node){
+            continue;
+        }
+        if(vis[mp[vec[node].first][i]]==-1){
+            dfs(mp[vec[node].first][i],mp,vec,vis,1-c,b);
+        }else if(vis[mp[vec[node].first][i]]==c){
+            b=false;
+        }
+    }
+    for(int i=0;i<mp[vec[node].second].size();i++){
+         if(mp[vec[node].second][i]==node){
+            continue;
+        }
+        if(vis[mp[vec[node].second][i]]==-1){
+            dfs(mp[vec[node].second][i],mp,vec,vis,1-c,b);
+        }else if(vis[mp[vec[node].second][i]]==c){
+            b=false;
+        }
+    }
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n;
+    cin>>n;
+    vpll vec;
+    map<ll,vll> mp;
+    rep(i,0,n){
+        ll x,y;
+        cin>>x>>y;
+        vec.pb({x,y});
+        mp[x].pb(i);
+        mp[y].pb(i);
     }
-   } 
+    for(auto x:mp){
+        if(x.second.size()!=2){
+            NO;
+            return;
+        }
+    }
+    vll vis(n,-1);
+    bool b=true;
+    for(int i=0;i<n;i++){
+        if(vis[i]==-1){
+            dfs(i,mp,vec,vis,0,b);
+        }
+    }
+    //vout(vis);
+    if(!b){
+        NO;
+        return;
+    }
+     vll vis0(n+1,0),vis1(n+1,0);
+    rep(i,0,n){
+        if(vis[i]==0){
+            vis0[vec[i].first]=1;
+            vis0[vec[i].second]=1;
+        }else if(vis[i]==1){
+            vis1[vec[i].first]=1;
+            vis1[vec[i].second]=1;
+        }
+    }
+    rep(i,1,n+1){
+        if(!vis0[i] || !vis1[i]){
+            NO;
+            return;
+        }
+    }
+    YES;
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

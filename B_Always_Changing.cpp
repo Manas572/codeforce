@@ -115,30 +115,59 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n;
+    cin>>n;
+    string s;
+    cin>>s;
+    ll ans=0;
+    map<char,ll>mp,tot;
+    string s1;
+    tot[s[0]]++;
+    s1+=s[0];
+    rep(i,1,n) {
+        if (s[i]==s[i - 1]){
+            mp[s[i]]++;
+        }else{
+            s1+=s[i];
+        }  
+        tot[s[i]]++;  
     }
-   } 
+    ll val1=max(mp['0'],mp['1']-1);
+    ll val2=max(mp['1'],mp['0']-1);
+    ll e0=val1-mp['0'];
+    ll e1=val2-mp['1'];
+    if(e0>0){
+        ll a0=0;
+        if(s1.size()>0 && s1.front()=='0'){
+            a0++;
+        }
+        if(s1.size()>1 && s1.back()=='0'){
+            a0++;
+        }
+        if(e0>a0){
+            prt(-1);
+            return;
+        }
+    }
+    if(e1>0){
+        ll a1=0;
+        if(s1.size()>0 && s1.front()=='1'){
+            a1++;
+        }
+        if(s1.size()>1 && s1.back()=='1'){
+            a1++;
+        }
+        if(e1>a1){
+            prt(-1);
+            return;
+        }
+    }
+    prt(val1+val2);
+   
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

@@ -119,9 +119,36 @@ void solve() {
     cin>>x;
     ll q;
     cin>>q;
+    priority_queue<ll> maxh;
+    priority_queue<ll,vector<ll>,greater<ll>> minh;
+    maxh.push(x);
     while (q--)
     {
-        
+        ll a,b;
+        cin>>a>>b;
+        ll val=maxh.top();
+        if(a>val){
+            minh.push(a);
+        }else{
+            maxh.push(a);
+        }
+        if(b>val){
+            minh.push(b);
+        }else{
+            maxh.push(b);
+        }
+        ll ts=maxh.size()+minh.size();
+        while(minh.size()<(ts/2)){
+            ll val2=maxh.top();
+            maxh.pop();
+            minh.push(val2);
+        }
+        while(minh.size()>(ts/2)){
+            ll val2=minh.top();
+            minh.pop();
+            maxh.push(val2);
+        }
+        prt(maxh.top());
     }
     
 }

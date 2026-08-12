@@ -115,30 +115,62 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n;
+    cin>>n;
+    vll b(n);
+    vin(b,n);
+    map<ll,vll> mp;
+    rep(i,0,n){
+        mp[b[i]].pb(i);
     }
-   } 
+    ll b1=1;
+    vll ans(n,-1);
+    vll r1(n,0);
+    rep(i,0,n){
+        r1[i]=i;
+    }
+    ll s=0,p=0;
+    for(auto i=mp.begin();i!=mp.end();i++){
+        vll ind=i->second;
+        ll v=i->first;
+        if(v!=s){
+            b1=0;
+        }
+        r1[ind[0]]=v;
+        auto it=next(i);
+        if(it==mp.end()){
+            break;
+        }
+        ll n=it->first;
+        ll d=n-s;
+        s+=d;
+        if((d%ind.size())!=0){
+            b1=0;
+        }
+        ll p1=d/ind.size();
+        if(p1<=p){
+            b1=0;
+        }
+        p=p1;
+        for(int j=0;j<ind.size();j++ ){
+            ans[ind[j]]=p1;
+        }
+    }
+    if(!b1){
+        prt(-1);
+        return;
+    }
+    p++;
+    rep(i,0,n){
+        if(ans[i]==-1){
+            ans[i]=p;
+        }
+    }
+    vout(ans);
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

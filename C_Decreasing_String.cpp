@@ -115,30 +115,65 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll pos;
+    string s;
+    cin>>s>>pos;
+    deque<ll> dq;
+    ll cnt=s.size();
+    if(pos<=cnt){
+        cout<<s[pos-1];
+        return;
     }
-   } 
+    ll n=s.size();
+    bool b=false;
+    ll val=n-1;
+    dq.push_back(s[0]-'a');
+    ll i=1;
+    while(i<n){
+        ll v2=s[i]-'a';
+        while(!dq.empty() && dq.back()>v2){
+            if(cnt+val<pos){
+               // prt("hi");
+                dq.pop_back();
+                cnt+=val;
+                val-=1;
+            }else{
+                b=true;
+                dq.pop_back();
+                break;
+            }
+        }
+        dq.push_back(s[i]-'a');
+        i++;
+        if(b){
+            break;
+        }
+    }
+    //cout<<cnt<<endl;
+    while(i<n){
+        dq.push_back(s[i]-'a');
+        i++;
+    }
+        while(cnt+val<pos){
+            // prt("hi");
+            // prt(cnt);
+            // prt(dq.back());
+            dq.pop_back();
+            cnt+=val;
+            val-=1;
+        }
+        
+        while(cnt+1<pos){
+            dq.pop_front();
+            cnt+=1;
+        }
+        char c=dq.front()+'a';
+        cout<<c;
+         
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

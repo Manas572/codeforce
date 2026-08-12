@@ -103,7 +103,7 @@ ll nCr(int n, int r) {
 // -------- Prime Factor Sieve --------
 vector<vector<int>> pf;
 
-void init_prime_factors(int N = 200000) {
+void init_prime_factors(int N = 300025) {
     pf.assign(N + 1, {});
     for (int i = 2; i <= N; i++) {
         if (pf[i].empty()) {
@@ -115,30 +115,76 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
+    ll n;
+    cin>>n;
+    vll vec(n);
+    vin(vec,n);
+    ll st,tar;
+    cin>>st>>tar;
+    st-=1;
+    tar-=1;
+    map<ll,vll> mp2;
+    rep(i,0,n){
+        ll num=vec[i];
+        for(int j=0;j<pf[num].size();j++){
+            mp2[pf[num][j]].pb(i);
         }
-    }else{
-        prt(freq[y+k]);
     }
-   } 
+    vll vis(n,0);
+    map<ll,ll> pfvis;
+    queue<ll> q;
+    vll par(n,-1);
+    q.push(st);
+    vis[st]=1;
+    ll lvl=0;
+    while(!q.empty()){
+        ll s=q.size();
+        for(int i=0;i<s;i++){
+            ll node=q.front();
+            q.pop();
+            if(lvl&1){
+                for(int j=0;j<mp2[node].size();j++){
+                    if(vis[mp2[node][j]]==0){
+                        vis[mp2[node][j]]=1;
+                        par[mp2[node][j]]=pfvis[node];
+                        q.push(mp2[node][j]);
+                    }
+                }
+            }else{
+                for(int j=0;j<pf[vec[node]].size();j++){
+                    if(!pfvis.count(pf[vec[node]][j])){
+                        pfvis[pf[vec[node]][j]]=node;
+                        q.push(pf[vec[node]][j]);
+                    }
+                }
+            }
+        }
+        lvl++;
+        if(vis[tar]){
+            break;
+        }
+    }
+    if(vis[tar]==0){
+        prt(-1);
+        return;
+    }
+    vll path;
+    ll n1=tar;
+    while(n1!=-1){
+        path.pb(n1);
+        n1=par[n1];
+    }
+    reverse(all(path));
+    cout<<path.size()<<"\n";
+    rep(i,0,path.size()){
+        cout<<path[i]+1<<" ";
+    }
+    cout<<" \n";
 }
 
 int main() {
     fast_io;
-     solve();
+    init_prime_factors();
+    solve();
     return 0;
 }

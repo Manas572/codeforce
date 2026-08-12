@@ -112,33 +112,68 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+bool check(ll mid,vll& seeds,vpll& seg,ll n){
+    vll vec(n,0);
+    rep(i,0,mid){
+        vec[seeds[i]]=1;
+    }
+    rep(i,1,n){
+        vec[i]+=vec[i-1];
+    }
+    for(auto x:seg){
+        ll l=x.first;
+        ll r=x.second;
+        ll len=r-l+1;
+        ll val=0;
+        if(l>0){
+            val=vec[l-1];
+        }
+        ll num=vec[r]-val;
+        ll p=1+(len/2);
+        if(num>=p){
+            return true;
+        }
+    }
+    return false;
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n,m;
+    cin>>n>>m;
+    vpll seg;
+    rep(i,0,m){
+        ll l,r;
+        cin>>l>>r;
+        l-=1;
+        r-=1;
+        seg.pb({l,r});
     }
-   } 
+    ll q;
+    cin>>q;
+    vll seeds;
+    rep(i,0,q){
+        ll x;
+        cin>>x;
+        x-=1;
+        seeds.pb(x);
+    }
+    ll ans=-1;
+    ll l=1;
+    ll r=q;
+    while(l<=r){
+        ll mid=l+(r-l)/2;
+        if(check(mid,seeds,seg,n)){
+            ans=mid;
+            r=mid-1;
+        }else{
+            l=mid+1;
+        }
+    }
+    prt(ans);
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

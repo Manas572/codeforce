@@ -115,30 +115,61 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
+    ll n,m,x,y;
+    cin>>n>>m>>x>>y;
+    vll a(x); 
+    vin(a, x);
+    vll b(y); 
+    vin(b,y);
+    stv(a);
+    stv(b);
+    vpll vec;
+    ll i=0,j=0;
+    while(i<x && j<y) {
+        if(a[i]==b[j]) {
+            vec.push_back({a[i],3});
+            i++; 
+            j++;
+        } else if(a[i]<b[j]) {
+            vec.push_back({a[i],1});
+            i++;
+        } else{
+            vec.push_back({b[j],2});
+            j++;
         }
-    }else{
-        prt(freq[y+k]);
     }
-   } 
+    while(j<y) { 
+        vec.push_back({b[j],2});
+        j++; 
+    }
+    while(i<x) { 
+        vec.push_back({a[i],1});
+        i++; 
+    }
+    sort(all(vec), greater<pll>());
+    ll ans=0,cnta=0,cntb=0,tot= 0;
+    for(auto p : vec) {
+      if(tot==n+m-1){
+        break;
+      }
+      if(p.second==3){
+         ans+=p.first;
+         tot++;
+      }else if(p.second==2 && cntb<m){
+        cntb++;
+         ans+=p.first;
+        tot++;
+      }else if(p.second==1 && cnta<n){
+        ans+=p.first;
+        tot++;
+        cnta++;
+      }
+    }
+    prt(ans);
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

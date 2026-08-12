@@ -115,26 +115,47 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll k;
+    cin>>k;
+    if(!(k&1)){
+        NO;
+        return;
     }
-   } 
+    YES;
+    if(k==1){
+       cout<<2<<" "<<1<<"\n"; 
+       cout<<1<<" "<<2<<"\n"; 
+       return;
+    }
+    ll tn=2*k-1;
+    ll ub=tn-1;
+    ll h=(ub)/2;
+    vpll edges;
+    for(int i=1;i<=h;i++){
+       for(int j=h+1;j<=ub;j++){
+         edges.pb({i,j});
+       }
+    }
+    for(int j=h+1;j<=ub;j++){
+        edges.pb({j,tn});
+    }
+    int i=1;
+    while(i<h){
+        edges.pb({i,i+1});
+        i+=2;
+    }
+    int n=edges.size();
+    for(int i=0;i<n;i++){
+        edges.pb({edges[i].first+tn,edges[i].second+tn});
+    }
+    edges.pb({tn,2*tn});
+
+    cout<<2*tn<<" "<<edges.size()<<endl;
+    for(int i=0;i<edges.size();i++){
+        cout<<edges[i].first<<" "<<edges[i].second<<endl;
+    }
+
+
 }
 
 int main() {

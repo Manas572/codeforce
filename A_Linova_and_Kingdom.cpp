@@ -112,29 +112,68 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+vector<vll> lca;
+ll dfs(ll node,map<ll,vector<ll>>& mp,vll& vis,ll lvl){
+    vis[node]=lvl;
+    ll ans=0;
+    for(int i=0;i<mp[node].size();i++){
+        if(vis[mp[node][i]]==-1){
+            ans+=dfs(mp[node][i],mp,vis,lvl+1);
+        }
+    }
+    lca.pb({ans,lvl,node});
+    return 1+ans;
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n,k;
+    cin>>n>>k;
+    map<ll,vector<ll>> mp;
+    rep(i,0,n-1){
+        ll u,v;
+        cin>>u>>v;
+        u-=1;
+        v-=1;
+        mp[u].pb(v);
+        mp[v].pb(u);
     }
-   } 
+    if(k==n){
+        prt(0);
+        return;
+    }
+    vll  vis(n,-1);
+    dfs(0,mp,vis,0);
+    sort(all(lca),[](const vll& a ,const vll& b){
+         return (a[1] - a[0]) > (b[1] - b[0]);
+    });
+    vll ind(n,0);
+    rep(i,0,k){
+        ind[lca[i][2]]=1;
+    }
+    queue<pll> q;
+    q.push({0,1});
+    vll vis2(n,-1);
+    vis2[0]=1;
+    ll ans=0;
+    while (!q.empty())
+    {
+        auto[node,lvl]=q.front();
+        q.pop();
+        for(int i=0;i<mp[node].size();i++){
+           if(vis2[mp[node][i]]==-1){
+             if(ind[mp[node][i]]){
+                //prt("here");
+                ans+=lvl;
+                q.push({mp[node][i],lvl});
+            }else{
+                q.push({mp[node][i],lvl+1});
+            }
+             vis2[mp[node][i]]=1;
+           }
+        }
+    }
+    prt(ans);
+    
 }
 
 int main() {

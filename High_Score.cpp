@@ -112,29 +112,59 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n,m;
+    cin>>n>>m;
+    vector<vll> edges;
+    map<ll,vll> mp;
+    rep(i,0,m){
+        ll a,b,c;
+        cin>>a>>b>>c;
+        edges.pb({a,b,c});
+        mp[b].pb(a);
     }
-   } 
+    vll dis(n+1,INT_MIN);
+    dis[1]=0;
+    rep(i,0,n-1){
+        for(auto v:edges){
+            if(dis[v[0]]!=INT_MIN && dis[v[1]]<dis[v[0]]+v[2]){
+                dis[v[1]]=dis[v[0]]+v[2];
+            }
+        }
+    }
+    vll upd;
+    for(auto v:edges){
+         if(dis[v[0]]!=INT_MIN && dis[v[1]]<dis[v[0]]+v[2]){
+                upd.pb(v[1]);
+            }
+    }
+    map<ll,ll> rch;
+    rch[n]++;
+    queue<ll> q;
+    q.push(n);
+    while (!q.empty())
+    {
+        ll node=q.front();
+        q.pop();
+        for(auto x:mp[node]){
+            if(!rch.count(x)){
+                rch[x]++;
+                q.push(x);
+            }
+        }
+    }
+    for(auto u:upd){
+        if(rch.count(u)){
+            prt(-1);
+            return;
+        }
+    }
+    if(dis[n]==INT_MIN){
+        prt(-1);
+        return;
+    }
+    prt(dis[n]);
 }
 
 int main() {

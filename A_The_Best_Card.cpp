@@ -103,7 +103,7 @@ ll nCr(int n, int r) {
 // -------- Prime Factor Sieve --------
 vector<vector<int>> pf;
 
-void init_prime_factors(int N = 200000) {
+void init_prime_factors(int N = 200005) {
     pf.assign(N + 1, {});
     for (int i = 2; i <= N; i++) {
         if (pf[i].empty()) {
@@ -112,33 +112,26 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+bool check(ll n){
+    for(int i=2;i<n;i++){
+        if((n%i)==0) return false;
+    }
+    return true;
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
+    ll n;
+    cin>>n;
+    n+=1;
+    if(check(n)){
+        YES;
     }else{
-        prt(freq[y+k]);
+        NO;
     }
-   } 
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

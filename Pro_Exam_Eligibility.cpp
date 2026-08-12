@@ -112,29 +112,41 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+bool check(double p,string& s){
+    vector<double> vec;
+    rep(i,0,s.size()){
+         if(s[i]=='o'){
+        vec.pb(1-p);
+    }else{
+        vec.pb(-p);
+    }
+    }
+    double m=0,cs=0;
+    rep(i,0,s.size()){
+        cs=max(cs,(double)0);
+         cs+=vec[i];
+        m=max(cs,m);
+    }
+    return (m>=0);
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
+    ll n,k;
+    cin>>n>>k;
+    string s;
+    cin>>s;
+    double l=0,r=1;
+    double ans=0;
+    while(l<=r){
+        double p=l+(r-l)/2;
+        if(check(p,s)){
+            ans=p;
+            l=p;
+        }else{
+            r=p;
         }
-    }else{
-        prt(freq[y+k]);
     }
-   } 
+    prt(ans);
 }
 
 int main() {

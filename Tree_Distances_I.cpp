@@ -112,29 +112,57 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+pair<ll,vll> bfs(ll src,unordered_map<ll,vll>& mp,ll n){
+    vll dis(n,-1);
+    queue<ll> q;
+    q.push(src);
+    dis[src]=0;
+    ll far=src;
+    while (!q.empty())
+    {
+        ll u=q.front();
+        q.pop();
+        far=u;
+        for(ll i=0;i<mp[u].size();i++){
+            if(dis[mp[u][i]]==-1){
+                dis[mp[u][i]]=dis[u]+1;
+                q.push(mp[u][i]);
+            }
+        }
+    }
+    return {far,dis};  
+}
+ll dfs(map<ll,vll>& mp,vll& vis,ll node){
+    ll ans=0;
+    vis[node]=1;
+    for(int i=0;i<mp[node].size();i++){
+       if(vis[mp[node][i]]==0){
+         ans=max(ans,dfs(mp,vis,mp[node][i]));
+       }
+    }
+    return 1+ans;
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n;
+    cin>>n;
+    unordered_map<ll,vll> mp;
+    rep(i,0,n-1){
+        ll u,v;
+        cin>>u>>v;
+        u-=1;
+        v-=1;
+        mp[u].pb(v);
+        mp[v].pb(u);
     }
-   } 
+    auto [A,dis0]=bfs(0,mp,n);
+    auto [B,dis1]=bfs(A,mp,n);
+    auto [C,dis2]=bfs(B,mp,n);
+    rep(i,0,n){
+        cout<<max(dis2[i],dis1[i])<<" ";
+    }
+    cout<<"\n";
+   
 }
 
 int main() {

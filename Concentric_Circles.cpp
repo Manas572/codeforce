@@ -12,8 +12,8 @@
 #define rev(i, a, l) for (ll i = a; i >= l; --i)
 #define chmin(a, l) (a = std::min(a, l))
 #define chmax(a, l) (a = std::max(a, l))
-#define YES cout << "YES\n"
-#define NO cout << "NO\n"
+#define YES cout << "Yes\n"
+#define NO cout << "No\n"
 #define vmin(v) (*min_element(v.begin(), v.end()))
 #define vmax(v) (*max_element(v.begin(), v.end()))
 #define INF 1e18
@@ -112,33 +112,29 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll x1, y1, x2, y2;
+    cin >> x1 >> y1 >> x2 >> y2;
+    ll x3, y3, x4, y4;
+    cin >> x3 >> y3 >> x4 >> y4;
+    ll a1 = 2 * (x1 - x2);
+    ll b1 = 2 * (y1 - y2);
+    ll c1 = x1 * x1 - x2 * x2 - y2 * y2 + y1 * y1;
+    ll a2 = 2 * (x3 - x4);
+    ll b2 = 2 * (y3 - y4);
+    ll c2 = x3 * x3 - x4 * x4 - y4 * y4 + y3 * y3;
+    bool nosol = ((__int128_t)a1 * b2 == (__int128_t)a2 * b1);
+    bool infsol = ((__int128_t)a1 * c2 == (__int128_t)a2 * c1) && ((__int128_t)b1 * c2 == (__int128_t)b2 * c1);
+    if (nosol && !infsol) {
+        NO;
+    } else {
+        YES;
     }
-   } 
 }
-
 int main() {
     fast_io;
-     solve();
+
+    tc solve();
     return 0;
 }

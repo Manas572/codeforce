@@ -113,28 +113,78 @@ void init_prime_factors(int N = 200000) {
     }
 }
 
+ll timer=0;
+vector<ll> tin, low;
+vector<bool> on_stack;
+stack<ll> st;
+ll ans=0;
+ll ways = 1;
+
+void dfs(ll u,unordered_map<ll,vll>& adj,vll& cost){
+    low[u]=timer;
+    tin[u]=timer;
+    st.push(u);
+    on_stack[u]=true;
+    timer++;
+    for(auto x:adj[u]){
+        if(tin[x]==-1){
+            dfs(x,adj,cost);
+            low[u]=min(low[u],low[x]);
+        }else if(on_stack[x]){
+            low[u]=min(low[u],tin[x]);
+        }
+    }
+    ll tans=LLONG_MAX;
+    unordered_map<ll,ll> freq;
+    if(low[u]==tin[u]){
+        while(true){
+            ll v=st.top();
+            st.pop();
+            on_stack[v] = false;
+            chmin(tans,cost[v]);
+            freq[cost[v]]++;
+            if(v==u){
+                break;
+            }
+        }
+        ans+=tans;
+         ways=(ways*freq[tans]) % MOD;
+    }
+
+}
+
+void init_scc(ll n,unordered_map<ll,vll>& adj,vll &cost){
+    tin.assign(n, -1);
+    low.assign(n, -1);
+    on_stack.assign(n, false);
+    timer = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (tin[i] == -1) {
+            dfs(i,adj,cost);
+        }
+    }
+}
+
+
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n;
+    cin>>n;
+    vll cost(n,0);
+    vin(cost,n);
+    ll m;
+    cin>>m;
+    unordered_map<ll,vll> adj;
+    rep(i,0,m){
+        ll u,v;
+        cin>>u>>v;
+         u-=1;
+        v-=1;
+        adj[u].pb(v);
     }
-   } 
+    init_scc(n,adj,cost);
+    cout<<ans<<" "<<ways<<"\n";
 }
 
 int main() {

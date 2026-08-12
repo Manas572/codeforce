@@ -115,26 +115,44 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n,m;
+    cin>>n>>m;
+    map<ll,vpll> adj;
+    rep(i,0,m){
+        ll u,v,w;
+        cin>>u>>v>>w;
+        adj[u].pb({v,w});
+        adj[v+n].pb({u+n,w});
     }
-   } 
+    rep(i,1,n+1){
+        adj[i].pb({i+n,0});
+    }
+    vll dis(2*n+1,INF);
+    priority_queue<pll,vector<pll>,greater<>>pq;
+    ll src=1;
+    dis[src]=0;
+    pq.push({0,src});
+    while (!pq.empty())
+    {
+        auto [d,u]=pq.top();
+        pq.pop();
+        if(d>dis[u]){
+            continue;
+        }
+        for(auto &e:adj[u]){
+            if(dis[e.first]>d+e.second){
+                dis[e.first]=d+e.second;
+                pq.push({dis[e.first],e.first});
+            }
+        }
+    }
+    for(int i=2;i<=n;i++){
+        ll val=min(dis[i],dis[i+n]);
+        if(val==INF) val=-1;
+        cout<<val<<" ";
+    }
+    cout<<"\n";
+    
 }
 
 int main() {

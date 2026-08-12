@@ -115,30 +115,36 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
+    ll n;
+    cin >> n;
+    ll ans = 0;
+    ll f1 = 0;
+    ll mval = 0;
+    map<ll, ll> freq,mp;
+    rep (i,0,n) {
+        ll cd;
+        cin >> cd;
+        ans += cd;
+        mp[cd]++;
+        freq[cd]++;
+        if (freq[cd] > f1) {
+            f1 = freq[cd];
+            mval = cd;
         }
-    }else{
-        prt(freq[y+k]);
     }
-   } 
+    ll s = n - f1; 
+    ll m1 = s + 3;
+    m1-=1;
+    //m1=4
+    if (f1 > m1) {
+        ll wc = f1 - m1;
+        ans -= (wc * mval);
+    }
+    prt(ans);
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

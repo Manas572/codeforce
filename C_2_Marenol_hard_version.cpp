@@ -114,31 +114,81 @@ void init_prime_factors(int N = 200000) {
 }
 
 // -------- Solve --------
-void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
+bool solve2(ll n,string& s1,string& s2) {
+    ll cs1=0;
+    ll cs2=0;
+    rep(i,0,n){
+        if(s1[i]=='0'){
+            cs1++;
         }
-    }else{
-        prt(freq[y+k]);
+        if(s2[i]=='0'){
+            cs2++;
+        }
     }
-   } 
+    if(cs1!=cs2){
+        return false;
+    }
+  ll cnt1=0,cnt2=0,cnt3=0,cnt4=0;
+  rep(i,0,n){
+    if(s1[i]=='0'){
+        if(i&1){
+            cnt2++;
+        }else{
+            cnt1++;
+        }
+    }
+    if(s2[i]=='0'){
+        if(i&1){
+            cnt4++;
+        }else{
+            cnt3++;
+        }
+    }
+  }
+  if(cnt1==cnt3 && cnt2==cnt4){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+void solve() {
+    ll n;
+    string s1,s2;
+    cin>>n>>s1>>s2;
+    if(!(solve2(n,s1,s2))){
+        prt(-1);
+        return;
+    }
+    vll s1e,s1o,s2e,s2o;
+    rep(i,0,n){
+        if(s1[i]=='1'){
+            if(i&1){
+                s1o.pb(i);
+            }else{
+                s1e.pb(i);
+            }
+        }
+        if(s2[i]=='1'){
+            if(i&1){
+                s2o.pb(i);
+            }else{
+                s2e.pb(i);
+            }
+        }
+    }
+    ll ans=0;
+    rep(i,0,s1e.size()){
+        ans+=(abs(s1e[i]-s2e[i])/2);
+    }
+     rep(i,0,s1o.size()){
+        ans+=(abs(s1o[i]-s2o[i])/2);
+    }
+    prt(ans);
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

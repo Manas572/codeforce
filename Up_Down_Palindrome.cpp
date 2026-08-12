@@ -12,8 +12,8 @@
 #define rev(i, a, l) for (ll i = a; i >= l; --i)
 #define chmin(a, l) (a = std::min(a, l))
 #define chmax(a, l) (a = std::max(a, l))
-#define YES cout << "YES\n"
-#define NO cout << "NO\n"
+#define YES cout << "Yes\n"
+#define NO cout << "No\n"
 #define vmin(v) (*min_element(v.begin(), v.end()))
 #define vmax(v) (*max_element(v.begin(), v.end()))
 #define INF 1e18
@@ -112,33 +112,47 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+bool check(vll &vec){
+    ll n=vec.size();
+    for(int i=0;i<n/2;i++){
+        if(vec[i]!=vec[n-1-i]){
+            return false;
+        }
+    }
+    return true;
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+    ll n;
+    cin>>n;
+    vll vec(n);
+    vin(vec,n);
+    if(check(vec)){
+        YES;
+        return;
     }
-   } 
+    ll m1=INT_MAX;
+    ll m2=INT_MIN;
+    for(int i=0;i<n/2;i++){
+        if(vec[i]!=vec[n-1-i]){
+            if(abs(vec[i]-vec[n-i-1])!=2){
+            NO;
+            return;
+        }
+        ll u=min(vec[i], vec[n-1-i]);
+        m2=max(m2,u);
+        m1=min(m1,u);
+        }
+    }
+    if(m2-m1<=1){
+        YES;
+    }else{
+        NO;
+    }
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

@@ -112,29 +112,37 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+bool check(ll mid,vll& vec,ll k){
+    ll ops=0;
+    rep(i,0,(ll)vec.size()){
+        ll ti=i+1;
+        if(mid>vec[i]){
+            ll dif=mid-vec[i];
+            ll t=(dif+ti-1)/ti;
+            ops+=t;
+            if (ops > k) return false;
+        }
+    }
+    return (ops<=k);
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
+    ll n,k;
+    cin>>n>>k;
+    vll vec(n,0);
+    vin(vec,n);
+    ll l=vmin(vec),r= vec[0] + k + 1;;
+    ll ans=l;
+    while(l<=r){
+        ll mid=l+(r-l)/2;
+        if(check(mid,vec,k)){
+            ans=mid;
+            l=mid+1;
+        }else{
+            r=mid-1;
         }
-    }else{
-        prt(freq[y+k]);
     }
-   } 
+    prt(ans);
 }
 
 int main() {

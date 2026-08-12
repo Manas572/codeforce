@@ -112,33 +112,53 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+pair<ll,vll> bfs(ll src,map<ll,vll>& mp,ll n){
+    vll dis(n,-1);
+    queue<ll> q;
+    q.push(src);
+    dis[src]=0;
+    ll far=src;
+    while (!q.empty())
+    {
+        ll u=q.front();
+        q.pop();
+        far=u;
+        for(ll i=0;i<mp[u].size();i++){
+            if(dis[mp[u][i]]==-1){
+                dis[mp[u][i]]=dis[u]+1;
+                q.push(mp[u][i]);
+            }
+        }
+    }
+    return {far,dis};  
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+     ll n,k,c;
+    cin>>n>>k>>c;
+    map<ll,vll> mp;
+    rep(i,0,n-1){
+        ll u,v;
+        cin>>u>>v;
+        u-=1;
+        v-=1;
+        mp[u].pb(v);
+        mp[v].pb(u);
     }
-   } 
+    auto [A,dis0]=bfs(0,mp,n);
+    auto [B,dis1]=bfs(A,mp,n);
+    auto [C,dis2]=bfs(B,mp,n);
+    ll ans=0;
+    rep(i,0,n){
+        //prt(max(dis1[i],dis2[i]));
+        ans=max(ans,max(dis1[i],dis2[i])*k-dis0[i]*c);
+    }
+   prt(ans);
+    
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

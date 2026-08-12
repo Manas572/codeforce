@@ -112,33 +112,54 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
-
+pair<double,double> check(double mid,vll& x,vll& t){
+    ll n=x.size();
+    vector<pair<double,double>>vec;
+    rep(i,0,n){
+        double l=x[i];
+        double r=x[i];
+        if(t[i]<mid){
+            double val=mid-t[i];
+            l-=val;
+            r+=val;
+        }
+        vec.pb({l,r});
+    }
+    auto [l1,r1]=vec[0];
+    rep(i,1,n){
+        l1=max(l1,vec[i].first);
+        r1=min(r1,vec[i].second);
+    }
+    if(l1>r1){
+        return {-1,-1};
+    }
+    return {l1,r1};
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
+    ll n;
+    cin>>n;
+    vll x(n);
+    vin(x,n);
+    vll t(n);
+    vin(t,n);
+    double l=0,r=1e9;
+    double ans=0;
+    rep(it,0,100){
+        double mid=l+(r-l)/2;
+        auto p=check(mid,x,t);
+        if(p.first!=-1){
+            ans=(double)(((double)p.first+(double)p.second)/2);
+            r=mid;
+        }else{
+            l=mid;
         }
-    }else{
-        prt(freq[y+k]);
     }
-   } 
+    cout << fixed << setprecision(10) << ans << '\n';
 }
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }

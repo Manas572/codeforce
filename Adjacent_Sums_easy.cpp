@@ -115,26 +115,58 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
+    ll n,m;
+    cin>>n>>m;
+    vll a(n);
+    vin(a,n);
+    vll b(n-1);
+    vin(b,n-1);
+    ll op1=0;
+    ll op2=0;
+    auto a1=a;
+    auto a2=a;
+    if(a[0]&1){
+        op1+=1;
+        a1[0]+=1;
     }else{
-        prt(freq[y+k]);
+        op2+=1;
+        a2[0]+=1;
     }
-   } 
+    for(int i=0;i<n-1;i++){
+        if(b[i]&1){
+            if((a1[i]+a1[i+1])&1){
+                //do nothing
+            }else{
+                a1[i+1]+=1;
+                op1+=1;
+            }
+        }else{
+           if((a1[i]+a1[i+1])&1){
+                a1[i+1]+=1;
+                op1+=1;
+            }else{
+              //do nothing
+            }
+        }
+    }
+     for(int i=0;i<n-1;i++){
+        if(b[i]&1){
+            if((a2[i]+a2[i+1])&1){
+                //do nothing
+            }else{
+                a2[i+1]+=1;
+                op2+=1;
+            }
+        }else{
+           if((a2[i]+a2[i+1])&1){
+                a2[i+1]+=1;
+                op2+=1;
+            }else{
+              //do nothing
+            }
+        }
+    }
+    prt(min(op1,op2));
 }
 
 int main() {

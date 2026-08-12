@@ -112,29 +112,70 @@ void init_prime_factors(int N = 200000) {
         }
     }
 }
+unordered_map<ll,vll> adj;
+ll timer=0;
+vll low,tin;
+vector<bool> on_stack;
+stack<ll> st;
+vector<vll> scc;
 
+void dfs(ll u){
+    low[u]=timer;
+    tin[u]=timer;
+    timer++;
+    st.push(u);
+    on_stack[u]=true;
+    for(auto x:adj[u]){
+        if(tin[x]==-1){
+            dfs(x);
+            low[u]=min(low[u],low[x]);
+        }else if(on_stack[x]){
+            low[u]=min(low[u],tin[x]);
+        }
+    }
+    if(low[u]==tin[u]){
+        vll comp;
+        while (true)
+        {
+            ll v=st.top();
+            st.pop();
+            on_stack[v]=false;
+            comp.pb(v);
+            if(v==u) break;
+        }
+        scc.pb(comp);
+    }
+}
+void init_scc(ll n){
+    low.assign(n,-1);
+    tin.assign(n,-1);
+    on_stack.assign(n,false);
+    for (int i = 0; i < n; i++) {
+        if (tin[i] == -1) {
+            dfs(i);
+        }
+    }
+}
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
-        }
-    }else{
-        prt(freq[y+k]);
+   ll n,m;
+   cin>>n>>m;
+   rep(i,0,m){
+    ll u,v;
+    cin>>u>>v;
+    u-=1;
+    v-=1;
+    adj[u].pb(v);
+   }
+   init_scc(n);
+   vll ans(n,0);
+   prt(scc.size());
+   rep(i,0,scc.size()){
+    for(auto x:scc[i]){
+        ans[x]=i+1;
     }
-   } 
+   }
+   vout(ans);
 }
 
 int main() {

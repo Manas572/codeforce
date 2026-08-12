@@ -115,30 +115,51 @@ void init_prime_factors(int N = 200000) {
 
 // -------- Solve --------
 void solve() {
-   ll n,q;
-   cin>>n>>q;
-    map<ll,ll> mp1,freq;
-    ll k=0;
-    ll val=1;
-   while(q--){
-    ll x,y;
-    cin>>x>>y;
-    if(x==1){
-        mp1[y]++;
-        ll v=mp1[y];
-        freq[v]++;
-        if(freq[val]==n){
-          k++;
-          val++;
+    ll n;
+    cin>>n;
+    vll vec(n);
+    vin(vec,n);
+    ll cnt=0;
+    rep(i,1,n){
+        if(vec[i-1]==vec[i]){
+            cnt++;
         }
-    }else{
-        prt(freq[y+k]);
     }
-   } 
+    if(cnt==0){
+        prt(n);
+        return;
+    }
+    vpll vec2;
+    vec2.pb({vec[0],1});
+    for(int i=1;i<n;i++){
+        if(vec2.back().first==vec[i]){
+            vec2.back().second++;
+        }else{
+            vec2.pb({vec[i],1});
+        }
+    }
+    for(int i=1;i<vec2.size();i++){
+     if(vec2[i].second>1 && vec2[i-1].second>1){
+        prt(vec2.size()+2);
+        return;
+     }   
+    }
+    for(int i=0;i<vec2.size();i++){
+       if(vec2[i].second>1){
+        bool b1=(i>0) && (i<2 || vec2[i-2].first!=vec2[i].first);
+        bool b2 = (i<vec2.size()-1) && (i>=vec2.size()-2 || vec2[i+2].first!=vec2[i].first);
+        if(b1 || b2){
+            prt(vec2.size()+1);
+            return;
+        }
+       }
+    }
+    prt(vec2.size());
 }
+
 
 int main() {
     fast_io;
-     solve();
+    tc solve();
     return 0;
 }
