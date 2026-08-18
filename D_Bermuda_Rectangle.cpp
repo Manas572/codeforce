@@ -1,0 +1,189 @@
+#include <bits/stdc++.h>
+#define fast_io ios::sync_with_stdio(false); cin.tie(nullptr);
+#define prt(x) cout << x << '\n'
+#define ll long long
+#define tc ll t2; cin >> t2; while(t2--)
+#define vin(v, n) for (ll i = 0; i < n; ++i) cin >> v[i]
+#define vout(v) for (auto &x : v) cout << x << ' '; cout << '\n'
+#define pb push_back
+#define all(x) x.begin(), x.end()
+#define stv(v) sort(v.begin(), v.end())
+#define rep(i, a, l) for (ll i = a; i < l; ++i)
+#define rev(i, a, l) for (ll i = a; i >= l; --i)
+#define chmin(a, l) (a = std::min(a, l))
+#define chmax(a, l) (a = std::max(a, l))
+#define yES cout << "yES\n"
+#define NO cout << "NO\n"
+#define vmin(v) (*min_element(v.begin(), v.end()))
+#define vmax(v) (*max_element(v.begin(), v.end()))
+#define INF 1e18
+#define MOD 1000000007
+#define MAXN 1000000
+
+using namespace std;
+
+typedef vector<ll> vll;
+
+
+typedef pair<ll,ll> pll;
+
+
+typedef vector<pll> vpll;
+
+
+// -------- Custom gcd + lcm --------
+ll gcdll(ll a, ll b) {
+    a = llabs(a);
+    b = llabs(b);
+    while (b != 0) {
+        ll r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+
+ll lcm(ll a, ll b) {
+    return a / gcdll(a, b) * b;
+}
+
+// -------- Binary Exponentiation --------
+ll modpow(ll a, ll e, ll m = MOD) {
+    a %= m;
+    ll res = 1;
+    while (e > 0) {
+        if (e & 1) res = (res * a) % m;
+        a = (a * a) % m;
+        e >>= 1;
+    }
+    return res;
+}
+
+// -------- Fermat Little Theorem (mod inverse) --------
+ll modinv(ll a, ll m = MOD) {
+    return modpow(a, m - 2, m);
+}
+
+// -------- Number of Divisors --------
+ll countDivisors(ll n) {
+    ll ans = 1;
+    for (ll i = 2; i * i <= n; ++i) {
+        if (n % i == 0) {
+            ll cnt = 0;
+            while (n % i == 0) {
+                n /= i;
+                cnt++;
+            }
+            ans *= (cnt + 1);
+        }
+    }
+    if (n > 1) ans *= 2;
+    return ans;
+}
+
+// -------- Combinatorics --------
+vll fact, invfact;
+
+void init_combinatorics(int n = MAXN) {
+    fact.assign(n + 1, 1);
+    for (int i = 1; i <= n; ++i)
+        fact[i] = fact[i - 1] * i % MOD;
+
+    invfact.assign(n + 1, 1);
+    invfact[n] = modinv(fact[n]);
+    for (int i = n; i >= 1; --i)
+        invfact[i - 1] = invfact[i] * i % MOD;
+}
+
+ll nCr(int n, int r) {
+    if (r < 0 || r > n) return 0;
+    return fact[n] * invfact[r] % MOD * invfact[n - r] % MOD;
+}
+
+// -------- Prime Factor Sieve --------
+vector<vector<int>> pf;
+
+void init_prime_factors(int N = 200000) {
+    pf.assign(N + 1, {});
+    for (int i = 2; i <= N; i++) {
+        if (pf[i].empty()) {
+            for (int j = i; j <= N; j += i)
+                pf[j].push_back(i);
+        }
+    }
+}
+vll fun(vll& vec,ll s){
+    ll prev=0;
+    vll pref(vec.size(),0);
+    rep(i,0,vec.size()){
+        ll prev=0;
+        if(i!=0){
+            prev=vec[i-1];
+        }
+        ll len=vec[i]-prev;
+        ll h=s/vec[i];
+        pref[i]=len*h;
+        if(i){
+            pref[i]+=pref[i-1];
+        }
+    }
+    return pref;
+}
+// -------- Solve --------
+void solve() {
+    ll s,q;
+    cin>>s>>q;
+    vll vec;
+    for(ll i=1;i*i<=s;i++){
+        if(s%i==0){
+            vec.pb(i);
+            if(i*i!=s){
+                vec.pb(s/i);
+            }
+        }
+    }
+    stv(vec);
+    ll n=vec.size();
+    auto pref=fun(vec,s);
+    while (q--) {
+        ll x,y;
+        cin>>x>>y;
+        // vll vec2(x);
+        // rep(i,0,x){
+        //     vec2[i]=x;
+        // }
+        ll id=lower_bound(all(vec),x)-vec.begin();
+        ll t2=upper_bound(all(vec),s/y)-vec.begin()-1;
+        if (t2>=id) {
+           prt(x*y);
+            continue;
+        }
+        ll ans=0;
+        if (t2>=0) {
+            ans+=vec[t2]*y;
+        }
+        if (id-1>t2) {
+            ans+=pref[id-1];
+            if (t2>=0) {
+                ans-=pref[t2];
+            }
+        }
+        // vll vec3(y);
+        // rep(i,0,y){
+        //     vec3[y]=y;
+        // }
+        ll prev=0;
+        if(id>0){
+            prev=vec[id-1];
+        }
+        ll len=x-prev;
+        ans+=len*(s/vec[id]);
+        prt(ans);
+    }
+}
+
+int main() {
+    fast_io;
+    tc solve();
+    return 0;
+}
