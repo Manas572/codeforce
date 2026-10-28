@@ -1,0 +1,171 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#define fast_io ios::sync_with_stdio(false); cin.tie(nullptr);
+#define prt(x) cout << x << '\n'
+#define ll long long
+#define tc ll t; cin >> t; while(t--)
+#define vin(v, n) for (ll i = 0; i < n; ++i) cin >> v[i]
+#define vout(v) for (auto &x : v) cout << x << ' '; cout << '\n'
+#define pb push_back
+#define all(x) x.begin(), x.end()
+#define stv(v) sort(v.begin(), v.end())
+#define rep(i, a, l) for (ll i = a; i < l; ++i)
+#define rev(i, a, l) for (ll i = a; i >= l; --i)
+#define chmin(a, l) (a = std::min(a, l))
+#define chmax(a, l) (a = std::max(a, l))
+#define YES cout << "Yes\n"
+#define NO cout << "No\n"
+#define vmin(v) (*min_element(v.begin(), v.end()))
+#define vmax(v) (*max_element(v.begin(), v.end()))
+#define INF 1e18
+#define MOD 1000000007
+#define MAXN 1000000
+
+using namespace std;
+using namespace __gnu_pbds;
+
+typedef vector<ll> vll;
+typedef pair<ll,ll> pll;
+typedef vector<pll> vpll;
+
+// -------- PBDS --------
+typedef tree<ll, null_type, less<ll>, rb_tree_tag, tree_order_statistics_node_update> pbds; // find_by_order, order_of_key
+typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update> pbds_multiset;
+
+// -------- Custom gcd + lcm --------
+ll gcdll(ll a, ll b) {
+    a = llabs(a);
+    b = llabs(b);
+    while (b != 0) {
+        ll r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+
+ll lcm(ll a, ll b) {
+    return a / gcdll(a, b) * b;
+}
+
+// -------- Binary Exponentiation --------
+ll modpow(ll a, ll e, ll m = MOD) {
+    a %= m;
+    ll res = 1;
+    while (e > 0) {
+        if (e & 1) res = (res * a) % m;
+        a = (a * a) % m;
+        e >>= 1;
+    }
+    return res;
+}
+
+// -------- Fermat Little Theorem (mod inverse) --------
+ll modinv(ll a, ll m = MOD) {
+    return modpow(a, m - 2, m);
+}
+
+// -------- Combinatorics --------
+vll fact, invfact;
+
+void init_combinatorics(int n = MAXN) {
+    fact.assign(n + 1, 1);
+    for (int i = 1; i <= n; ++i)
+        fact[i] = fact[i - 1] * i % MOD;
+
+    invfact.assign(n + 1, 1);
+    invfact[n] = modinv(fact[n]);
+    for (int i = n; i >= 1; --i)
+        invfact[i - 1] = invfact[i] * i % MOD;
+}
+
+ll nCr(int n, int r) {
+    if (r < 0 || r > n) return 0;
+    return fact[n] * invfact[r] % MOD * invfact[n - r] % MOD;
+}
+
+// -------- Binary Lifting / LCA --------
+const int LOG = 20;
+vector<vector<int>> adj, up;
+vector<int> depth;
+
+void dfs_lca(int u, int p) {
+    up[u][0] = p;
+    for (int i = 1; i < LOG; i++) {
+        up[u][i] = up[up[u][i - 1]][i - 1];
+    }
+    for (int v : adj[u]) {
+        if (v == p) continue;
+        depth[v] = depth[u] + 1;
+        dfs_lca(v, u);
+    }
+}
+
+void build_lca(int n, int root = 1) {
+    up.assign(n + 1, vector<int>(LOG, 0));
+    depth.assign(n + 1, 0);
+    dfs_lca(root, 0);
+}
+
+int kthAncestor(int u, int k) {
+    for (int i = 0; i < LOG; i++) {
+        if (k & (1 << i)) {
+            u = up[u][i];
+        }
+    }
+    return u;
+}
+
+int lca(int u, int v) {
+    if (depth[u] < depth[v]) swap(u, v);
+    u = kthAncestor(u, depth[u] - depth[v]);
+    if (u == v) return u;
+    for (int i = LOG - 1; i >= 0; i--) {
+        if (up[u][i] != up[v][i]) {
+            u = up[u][i];
+            v = up[v][i];
+        }
+    }
+    return up[u][0];
+}
+
+// -------- Solve --------
+void solve() {
+    string s1,s2;
+    cin>>s1>>s2;
+    vector<vector<char>> vec(2);
+    vec[0].pb(s1[0]);
+    vec[0].pb(s1[1]);
+    vec[1].pb(s2[0]);
+    vec[1].pb(s2[1]);
+    pair<ll,ll> p={-1,-1};
+    for(int i=0;i<2;i++){
+        for(int j=0;j<2;j++){
+            if(vec[i][j]=='A'){
+                p.first=i;
+                p.second=j;
+            }
+        }
+    }
+    vector<pll> dir={{1,0},{0,1},{-1,0},{0,-1}};
+    rep(i,0,dir.size()){
+        ll r=p.first+dir[i].first;
+        ll c=p.second+dir[i].second;
+        if(r>=2 || r<0) continue;
+        if(c>=2 || c<0) continue;
+        if(vec[r][c]=='D'){
+            YES;
+            return;
+        }
+    }
+    NO;
+    
+
+}
+
+int main() {
+    fast_io;
+     solve();
+    return 0;
+}
